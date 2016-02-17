@@ -19,5 +19,5 @@
 * [chapter12](PartIII/chapter12.md)
 * [chapter13](PartIII/chapter13.md)
 * [chapter14](PartIII/chapter14.md)
-* Part III - Audio Effects
+* [Part III - Audio Effects](part_iii_-_audio_effects.md)
 
