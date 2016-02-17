@@ -1,2 +1,2 @@
-# chapter19
+# Extending SuperCollider
 
