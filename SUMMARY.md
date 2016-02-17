@@ -21,5 +21,5 @@
    * [Frequency Domain Effects (FFT)](PartIII/chapter13.md)
    * [Busses, Nodes, Groups and Signal Flow](PartIII/chapter14.md)
 * [Musical Patterns on SC Server](PartIV/chapter15.md)
-* chapter16
+* [chapter16](PartIV/chapter16.md)
 
