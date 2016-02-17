@@ -114,11 +114,7 @@ This is a simple case study of how UGens can be added (b+c), and used in any cal
 
 A good way to explore UGens is to browse them in the documentation.
 
-{line-numbers=off}
-~~~~~~~
-UGen.browse; // XXX check if this works
-~~~~~~~
-
+    UGen.browse; // XXX check if this works
 
 ## The SynthDef
 
