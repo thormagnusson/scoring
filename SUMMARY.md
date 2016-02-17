@@ -16,8 +16,8 @@
    * [Samples and Buffers](PartII/chapter9.md)
    * [Granular Synthesis](PartII/chapter10.md)
    * [Physical Modelling](PartII/chapter11.md)
-* [chapter12](PartIII/chapter12.md)
-* [chapter13](PartIII/chapter13.md)
-* [chapter14](PartIII/chapter14.md)
 * [Part III - Audio Effects](part_iii_-_audio_effects.md)
+   * [Time Domain Effects](PartIII/chapter12.md)
+   * [Frequency Domain Effects (FFT)](PartIII/chapter13.md)
+   * [Busses, Nodes, Groups and Signal Flow](PartIII/chapter14.md)
 
