@@ -12,4 +12,5 @@
    * [Additive Synthesis](PartII/chapter_5.md)
 * [chapter_6](PartII/chapter6.md)
 * [chapter_7](PartII/chapter7.md)
+* chapter_8
 
