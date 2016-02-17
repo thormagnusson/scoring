@@ -659,50 +659,50 @@ A little transcription of Mozart’s Piano Sonata No 16 in C major. Here the ins
 ## Syncing Patterns and TempoClocks
 
 
-SynthDef(\string, {arg out=0, freq=440, pan=0, sustain=0.5, amp=0.3;
-	var pluck, period, string;
-	pluck = PinkNoise.ar(Decay.kr(Impulse.kr(0.005), 0.05));
-	period = freq.reciprocal;
-	string = CombL.ar(pluck, period, period, sustain*6);
-	string = LeakDC.ar(LPF.ar(Pan2.ar(string, pan), 12000)) * amp;
-	DetectSilence.ar(string, doneAction:2);
-	Out.ar(out, string)
-}).add;
-
-
-SynthDef(\impulse, {
-	Out.ar(0, Impulse.ar(0)!2);	
-}).add
-
-Synth(\impulse)
-
-Pbind(
-	\instrument, \impulse,
-	\dur, 1
-).play(TempoClock.default, quant:1)
-
-// not working
-TempoClock.default.play({
-	Synth(\impulse, [\amp, 2]); // this is the problem
-	1.0
-	}, quant:[1, Server.default.latency] );
-
-// working
-TempoClock.default.play({
-	s.sendBundle(0.2, ["/s_new", \impulse, s.nextNodeID, 0, 1]);
-	1.0
-	}, quant:[1, 0] );
-
-TempoClock.default.tempo = 2.5
-
-Pbind(
-	\instrument, \string,
-	\freq, Pseq([440, 880], inf),
-	\dur, 1
-).play(TempoClock.default, quant:1);
-
-TempoClock.default.play({arg i;
-	s.sendBundle(0.2, ["/s_new", \string, s.nextNodeID, 0, 1, \freq, if(i.asInteger.even, {660}, {770}), \amp, 0.3]);
-	1.0
-	}, quant:[1, 0] );
+    SynthDef(\string, {arg out=0, freq=440, pan=0, sustain=0.5, amp=0.3;
+    	var pluck, period, string;
+    	pluck = PinkNoise.ar(Decay.kr(Impulse.kr(0.005), 0.05));
+    	period = freq.reciprocal;
+    	string = CombL.ar(pluck, period, period, sustain*6);
+    	string = LeakDC.ar(LPF.ar(Pan2.ar(string, pan), 12000)) * amp;
+    	DetectSilence.ar(string, doneAction:2);
+    	Out.ar(out, string)
+    }).add;
+    
+    
+    SynthDef(\impulse, {
+    	Out.ar(0, Impulse.ar(0)!2);	
+    }).add
+    
+    Synth(\impulse)
+    
+    Pbind(
+    	\instrument, \impulse,
+    	\dur, 1
+    ).play(TempoClock.default, quant:1)
+    
+    // not working
+    TempoClock.default.play({
+    	Synth(\impulse, [\amp, 2]); // this is the problem
+    	1.0
+    	}, quant:[1, Server.default.latency] );
+    
+    // working
+    TempoClock.default.play({
+    	s.sendBundle(0.2, ["/s_new", \impulse, s.nextNodeID, 0, 1]);
+    	1.0
+    	}, quant:[1, 0] );
+    
+    TempoClock.default.tempo = 2.5
+    
+    Pbind(
+    	\instrument, \string,
+    	\freq, Pseq([440, 880], inf),
+    	\dur, 1
+    ).play(TempoClock.default, quant:1);
+    
+    TempoClock.default.play({arg i;
+    	s.sendBundle(0.2, ["/s_new", \string, s.nextNodeID, 0, 1, \freq, if(i.asInteger.even, {660}, {770}), \amp, 0.3]);
+    	1.0
+    	}, quant:[1, 0] );
  
