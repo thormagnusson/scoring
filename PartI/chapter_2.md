@@ -423,23 +423,19 @@ ProxySpace is one such area. It makes live coding and various on line coding ext
     ~signal[3] = nil;
     ~signal[4] = nil;
     ~signal[5] = nil;
-~~~~~~~
 
 Another ProxySpace example:
 
-{line-numbers=off}
-~~~~~~~
-p = ProxySpace.push(s.boot);
-~blipper = { |freq=20, nHarm=30, amp=0.1| Blip.ar(freq, nHarm, amp)!2 };
-~blipper.play;
-~lfo = { MouseX.kr(10, 100, 1) };
-~blipper.map(\freq, ~lfo);
-~blipper.set(\nHarm, 50)
-~lfn = { LFDNoise3.kr(15, 30, 40) };
-~blipper.map(\nHarm, ~lfn);
-~lfn = 30;
-~blipper.set(\nHarm, 50);
-~~~~~~~
+    p = ProxySpace.push(s.boot);
+    ~blipper = { |freq=20, nHarm=30, amp=0.1| Blip.ar(freq, nHarm, amp)!2 };
+    ~blipper.play;
+    ~lfo = { MouseX.kr(10, 100, 1) };
+    ~blipper.map(\freq, ~lfo);
+    ~blipper.set(\nHarm, 50)
+    ~lfn = { LFDNoise3.kr(15, 30, 40) };
+    ~blipper.map(\nHarm, ~lfn);
+    ~lfn = 30;
+    ~blipper.set(\nHarm, 50);
 
 ## Ndef
 
