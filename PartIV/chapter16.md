@@ -581,80 +581,79 @@ it's hard to get this clear as they are running the same pitch patterns so let's
     u.tempo = 3.2;
 
 
-
 ### Popcorn
 
 
-// An example of making a tune using patterns. For an excellent example
-// take a look at spacelab, in examples/pieces/spacelab.scd
+An example of making a tune using patterns. For an excellent example take a look at spacelab, in examples/pieces/spacelab.scd
 
 
-SynthDescLib.global.read;
+    SynthDescLib.global.read;
+
 // the poppcorn 
 
-(
-~s1 = [72, 70, 72, 67, 64, 67, 60];
-~s2 = [72, 74, 75, 74, 75, 74, 72, 74, 72, 74, 72, 70, 72, 67, 64, 67, 72];
-
-~t1 = [0.25, 0.25, 0.25, 0.25, 0.125, 0.25, 0.625];
-~t2 = [0.25, 0.25, 0.25, 0.125, 0.25, 0.125, 0.25, 0.25, 0.125, 0.25, 0.125, 0.25, 0.25, 0.25, 0.125, 0.25, 0.5 ];
-
-c = Pdef(\moogy, 
-		Pbind(\instrument, \synth1, // using our synth1 synthdef
-					\freq, 
-						Pseq.new([
-							Pseq.new([
-								Pseq.new(~s1.midicps, 2),
-								Pseq.new(~s2.midicps, 1)
-								], 2),
-							Pseq.new([
-								Pseq.new((~s1+7).midicps, 2),
-								Pseq.new((~s2+7).midicps, 1)
-								], 2)	
-							], inf),
-					\dur, Pseq.new([ 
-							Pseq.new(~t1, 2),
-							Pseq.new(~t2, 1)
-							], inf)
-		)
-);
-Pdef(\moogy).play
-)
+    (
+    ~s1 = [72, 70, 72, 67, 64, 67, 60];
+    ~s2 = [72, 74, 75, 74, 75, 74, 72, 74, 72, 74, 72, 70, 72, 67, 64, 67, 72];
+    
+    ~t1 = [0.25, 0.25, 0.25, 0.25, 0.125, 0.25, 0.625];
+    ~t2 = [0.25, 0.25, 0.25, 0.125, 0.25, 0.125, 0.25, 0.25, 0.125, 0.25, 0.125, 0.25, 0.25, 0.25, 0.125, 0.25, 0.5 ];
+    
+    c = Pdef(\moogy, 
+    		Pbind(\instrument, \synth1, // using our synth1 synthdef
+    					\freq, 
+    						Pseq.new([
+    							Pseq.new([
+    								Pseq.new(~s1.midicps, 2),
+    								Pseq.new(~s2.midicps, 1)
+    								], 2),
+    							Pseq.new([
+    								Pseq.new((~s1+7).midicps, 2),
+    								Pseq.new((~s2+7).midicps, 1)
+    								], 2)	
+    							], inf),
+    					\dur, Pseq.new([ 
+    							Pseq.new(~t1, 2),
+    							Pseq.new(~t2, 1)
+    							], inf)
+    		)
+    );
+    Pdef(\moogy).play
+    )
 
 
 ### Mozart
 
 A little transcription of Mozart’s Piano Sonata No 16 in C major. Here the instrument has been put into a variable called "instr" so it's easier to quickly change the instrument.
 
-(
-var instr = \default;
-Ppar([
-// right hand - using the Event-style notation
-Pseq([
-        (\instrument: instr, \midinote: 72, \dur: 1),
-        (\instrument: instr, \midinote: 76, \dur: 0.5),
-        (\instrument: instr, \midinote: 79, \dur: 0.5),
-        (\instrument: instr, \midinote: 71, \dur: 0.75),
-        (\instrument: instr, \midinote: 72, \dur: 0.125),
-        (\instrument: instr, \midinote: 74, \dur: 0.125),
-        (\instrument: instr, \midinote: 72, \dur: 1),
-        (\instrument: instr, \midinote: 81, \dur: 1),
-        (\instrument: instr, \midinote: 79, \dur: 0.5),
-        (\instrument: instr, \midinote: 84, \dur: 0.5),
-        (\instrument: instr, \midinote: 79, \dur: 0.5),
-        (\instrument: instr, \midinote: 77, \dur: 0.25),
-        (\instrument: instr, \midinote: 76, \dur: 0.125),
-        (\instrument: instr, \midinote: 77, \dur: 0.125),
-        (\instrument: instr, \midinote: 76, \dur: 1)
-], 1),
-
-// left hand - array notation
-Pbind(\instrument, instr, 
-        \midinote, Pseq([60, 67, 64, 67, 60, 67, 64, 67, 62, 67, 65, 67, 60, 67, 64, 67,
-	                 60, 69, 65, 69, 60, 67, 64, 67, 59, 67, 62, 67, 60, 67, 64, 67 ], 1),
-        \dur, 0.25
-        )], 1).play
-)
+    (
+    var instr = \default;
+    Ppar([
+    // right hand - using the Event-style notation
+    Pseq([
+            (\instrument: instr, \midinote: 72, \dur: 1),
+            (\instrument: instr, \midinote: 76, \dur: 0.5),
+            (\instrument: instr, \midinote: 79, \dur: 0.5),
+            (\instrument: instr, \midinote: 71, \dur: 0.75),
+            (\instrument: instr, \midinote: 72, \dur: 0.125),
+            (\instrument: instr, \midinote: 74, \dur: 0.125),
+            (\instrument: instr, \midinote: 72, \dur: 1),
+            (\instrument: instr, \midinote: 81, \dur: 1),
+            (\instrument: instr, \midinote: 79, \dur: 0.5),
+            (\instrument: instr, \midinote: 84, \dur: 0.5),
+            (\instrument: instr, \midinote: 79, \dur: 0.5),
+            (\instrument: instr, \midinote: 77, \dur: 0.25),
+            (\instrument: instr, \midinote: 76, \dur: 0.125),
+            (\instrument: instr, \midinote: 77, \dur: 0.125),
+            (\instrument: instr, \midinote: 76, \dur: 1)
+    ], 1),
+    
+    // left hand - array notation
+    Pbind(\instrument, instr, 
+            \midinote, Pseq([60, 67, 64, 67, 60, 67, 64, 67, 62, 67, 65, 67, 60, 67, 64, 67,
+    	                 60, 69, 65, 69, 60, 67, 64, 67, 59, 67, 62, 67, 60, 67, 64, 67 ], 1),
+            \dur, 0.25
+            )], 1).play
+    )
 
 
 ## Syncing Patterns and TempoClocks
