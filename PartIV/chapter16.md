@@ -130,7 +130,7 @@ You will get an error message that could become familiar:
 
 You can also get this done by "deferring" the command to the AppClock using .defer.
 
-{inf.do({ {x.value_(1.0.rand)}.defer; Synth(\sine); 0.4.wait})}.fork
+    {inf.do({ {x.value_(1.0.rand)}.defer; Synth(\sine); 0.4.wait})}.fork
 
 So here we are using the SystemClock to play the \sine synth, but deferring the updating of the GUI to the AppClock.
 
@@ -140,151 +140,151 @@ TempoClocks are typically used for musical tasks. You can run many tempo clocks 
 
 Let's explore the tempo clock:
 
-t = TempoClock(2); // tempo is 2 beats per second (120 bpm);
+    t = TempoClock(2); // tempo is 2 beats per second (120 bpm);
 
 Many people who think in BPM (beats per minute) typically set the argument to the tempo clock as "120/60" (which equals to 2 beats per second), or "60/60" (which is 1 bps, and SuperCollider's "default" tempo).
 
 The clock above is now in a variable "t" and we can use it to schedule events (at a particular beat in the future):
 
-t.schedAbs(t.beats.ceil, { arg beat, sec; [beat, sec].postln; 1});
-t.schedAbs(t.beats.ceil, { arg beat, sec; "ho ho --".post; [beat, sec].postln; 1 });
+    t.schedAbs(t.beats.ceil, { arg beat, sec; [beat, sec].postln; 1});
+    t.schedAbs(t.beats.ceil, { arg beat, sec; "ho ho --".post; [beat, sec].postln; 1 });
 
 And we can change the tempo:
 
-t.tempo_(4)
+    t.tempo_(4)
 
-t.beatDur // we can ask the clock the duration of the beats
-t.beats // the beat time of the clock
-
-t.clear
+    t.beatDur // we can ask the clock the duration of the beats
+    t.beats // the beat time of the clock
+    
+    t.clear
 
 Polyrhythm of 3/4 against 4/4
 
-(
-t = TempoClock(4);
-t.schedAbs(t.beats.ceil, { arg beat, sec;
-	beat.postln;
-	if (beat % 2==0, {Synth(\sine, [\freq, 444])});
-	if (beat % 4==0, {Synth(\sine, [\freq, 333])});
-	if (beat % 3==0, {Synth(\sine, [\freq, 888])});
-	1; // repeat
-});
-)
-t.tempo_(6)
+    (
+    t = TempoClock(4);
+    t.schedAbs(t.beats.ceil, { arg beat, sec;
+    	beat.postln;
+    	if (beat % 2==0, {Synth(\sine, [\freq, 444])});
+    	if (beat % 4==0, {Synth(\sine, [\freq, 333])});
+    	if (beat % 3==0, {Synth(\sine, [\freq, 888])});
+    	1; // repeat
+    });
+    )
+    t.tempo_(6)
 
 Polyrhythm of 5/4 against 4/4
-(
-t = TempoClock(4);
-t.schedAbs(t.beats.ceil, { arg beat, sec;
-	if (beat % 2==0, {Synth(\sine, [\freq, 444])});
-	if (beat % 4==0, {Synth(\sine, [\freq, 333])});
-	if (beat % 5==0, {Synth(\sine, [\freq, 888])});
-	1; // repeat
-});
 
-)
+    (
+    t = TempoClock(4);
+    t.schedAbs(t.beats.ceil, { arg beat, sec;
+    	if (beat % 2==0, {Synth(\sine, [\freq, 444])});
+    	if (beat % 4==0, {Synth(\sine, [\freq, 333])});
+    	if (beat % 5==0, {Synth(\sine, [\freq, 888])});
+    	1; // repeat
+    });
+    
+    )
 
 Or perhaps a polyrhythm of 5/4 against 4/4 where the bass line is in 4/4 and the high synth in 5/4.
-(
-t = TempoClock(4);
 
-t.schedAbs(t.beats.ceil, { arg beat, sec;
-	if (beat % 2==0, {Synth(\sine, [\freq, 60.midicps])});
-	if (beat % 4==0, {Synth(\sine, [\freq, 64.midicps])});
-	if (beat % 5==0, {Synth(\synth1, [\freq, 72.midicps])});
-	if (beat % 5==3, {Synth(\synth1, [\freq, 77.midicps])});
-	1; // repeat
-});
-)
+    (
+    t = TempoClock(4);
+    
+    t.schedAbs(t.beats.ceil, { arg beat, sec;
+    	if (beat % 2==0, {Synth(\sine, [\freq, 60.midicps])});
+    	if (beat % 4==0, {Synth(\sine, [\freq, 64.midicps])});
+    	if (beat % 5==0, {Synth(\synth1, [\freq, 72.midicps])});
+    	if (beat % 5==3, {Synth(\synth1, [\freq, 77.midicps])});
+    	1; // repeat
+    });
+    )
 
 Another version
 
-(
-t = TempoClock(4);
-
-t.schedAbs(t.beats.ceil, { arg beat, sec;
-	if (beat % 4==0, {"one".postln; Synth(\sine, [\freq, 60.midicps])});
-	if (beat % 4==2, {"two".postln; Synth(\sine, [\freq, 72.midicps])});
-	if ((beat % 4==1) || (beat % 4==3), {Synth(\sine, [\freq, 84.midicps])});
-	
-	if (beat % 5==0, {Synth(\synth1, [\freq, 89.midicps, \amp, 0.2])});
-	if (beat % 5==2, {Synth(\synth1, [\freq, 96.midicps, \amp, 0.2])});
-	1; // repeat
-});
-)
+    (
+    t = TempoClock(4);
+    
+    t.schedAbs(t.beats.ceil, { arg beat, sec;
+    	if (beat % 4==0, {"one".postln; Synth(\sine, [\freq, 60.midicps])});
+    	if (beat % 4==2, {"two".postln; Synth(\sine, [\freq, 72.midicps])});
+    	if ((beat % 4==1) || (beat % 4==3), {Synth(\sine, [\freq, 84.midicps])});
+    	
+    	if (beat % 5==0, {Synth(\synth1, [\freq, 89.midicps, \amp, 0.2])});
+    	if (beat % 5==2, {Synth(\synth1, [\freq, 96.midicps, \amp, 0.2])});
+    	1; // repeat
+    });
+    )
 
 We can try to make this a bit more interesting by creating another synth:
 
-(
-SynthDef( \klanks, { arg freqScale = 1.0, amp = 0.1;
-	var trig, klan;
-	var  p, exc, x, s;
-	trig = Impulse.ar( 0 );
-	klan = Klank.ar(`[ Array.fill( 16, { linrand(8000.0 ) + 60 }), nil, Array.fill( 16, { rrand( 0.1, 2.0)})], trig, freqScale );
-	klan = (klan * amp).softclip;
-	DetectSilence.ar( klan, doneAction: 2 );
-	Out.ar( 0, Pan2.ar( klan ));
-}).store;
-)
+    (
+    SynthDef( \klanks, { arg freqScale = 1.0, amp = 0.1;
+    	var trig, klan;
+    	var  p, exc, x, s;
+    	trig = Impulse.ar( 0 );
+    	klan = Klank.ar(`[ Array.fill( 16, { linrand(8000.0 ) + 60 }), nil, Array.fill( 16, { rrand( 0.1, 2.0)})], trig, freqScale );
+    	klan = (klan * amp).softclip;
+    	DetectSilence.ar( klan, doneAction: 2 );
+    	Out.ar( 0, Pan2.ar( klan ));
+    }).store;
+    )
 
 And play the same polyrhythm.
 
-(
-t = TempoClock(4);
+    (
+    t = TempoClock(4);
+    
+    t.schedAbs(t.beats.ceil, { arg beat, sec;
+    	if (beat % 4==0, {"one".postln; Synth(\klanks, [\freqScale, 40.midicps])});
+    	if (beat % 4==2, {"two".postln; Synth(\klanks, [\freqScale, 52.midicps])});
+    	if ((beat % 4==1) || (beat % 4==3), {Synth(\klanks, [\freqScale, 43.midicps])});
+    	
+    	if (beat % 7==0, {Synth(\synth1, [\freq, 88.midicps, \amp, 0.2])});
+    	if (beat % 7==3, {Synth(\synth1, [\freq, 96.midicps, \amp, 0.2])});
+    	if (beat % 7==5, {Synth(\synth1, [\freq, 86.midicps, \amp, 0.2])});
+    
+    	1; // repeat
+    });
+    )
+    
+    t.tempo_(8)
 
-t.schedAbs(t.beats.ceil, { arg beat, sec;
-	if (beat % 4==0, {"one".postln; Synth(\klanks, [\freqScale, 40.midicps])});
-	if (beat % 4==2, {"two".postln; Synth(\klanks, [\freqScale, 52.midicps])});
-	if ((beat % 4==1) || (beat % 4==3), {Synth(\klanks, [\freqScale, 43.midicps])});
-	
-	if (beat % 7==0, {Synth(\synth1, [\freq, 88.midicps, \amp, 0.2])});
-	if (beat % 7==3, {Synth(\synth1, [\freq, 96.midicps, \amp, 0.2])});
-	if (beat % 7==5, {Synth(\synth1, [\freq, 86.midicps, \amp, 0.2])});
+an example showing tempo changes 
 
-	1; // repeat
-});
-)
-
-t.tempo_(8)
-
-
-
-// an example showing tempo changes 
-
-(
-t = TempoClock(80/60); // 80 bpm
-// schedule an event at next whole beat
-t.schedAbs(t.beats.ceil, { arg beat, sec; 
-	"beat : ".post; beat.postln;
-	if (beat % 4==0, { Synth(\sine, [\freq, 60.midicps]) });
-	if (beat % 4==2, { Synth(\sine, [\freq, 67.midicps]) });
-	if (beat % 0==0, { Synth(\sine, [\freq, 72.midicps]) });
-	1 // 1 here means that we are repeating/looping this
-});
-t.schedAbs(16, { arg beat, sec; 
-	" ****  tempochange on beat : ".post; beat.postln; 
-	t.tempo_(150/60); // 150 bpm
-});
-5.do({ |i| // on beats 32, 36, 40, 44, 48 
-	t.schedAbs(32+(i*4), { arg beat, sec;
-		" ****  tempo is now : ".post; (150-(10*(i+1))).post; " BPM".postln; 
-		t.tempo_((150-(10*(i+1)))/60); // going down by 10 bpm each time
-	});
-});
-t.schedAbs(60, { arg beat; t.tempo_(200/60) }); // 200 bpm
-t.schedAbs(76, { arg beat;
-	t.clear;
-	t.schedAbs(t.beats.ceil, { arg beat, sec; 
-		"beat : ".post; beat.postln;
-		if (beat % 4==0, { Synth(\sine, [\freq, 67.midicps]) });
-		if (beat % 4==2, { Synth(\sine, [\freq, 74.midicps]) });
-		if (beat % 0==0, { Synth(\sine, [\freq, 79.midicps]) });
-		1 // 1 here means that we are repeating/looping this
-	});
-	t.schedAbs(92, { arg beat; t.stop }); // stop it!
-}); // 200 bpm
-t.schedAbs(92, { arg beat; t.stop }); // if we tried to stop it here, it would have been "cleared"
-)
+    (
+    t = TempoClock(80/60); // 80 bpm
+    // schedule an event at next whole beat
+    t.schedAbs(t.beats.ceil, { arg beat, sec; 
+    	"beat : ".post; beat.postln;
+    	if (beat % 4==0, { Synth(\sine, [\freq, 60.midicps]) });
+    	if (beat % 4==2, { Synth(\sine, [\freq, 67.midicps]) });
+    	if (beat % 0==0, { Synth(\sine, [\freq, 72.midicps]) });
+    	1 // 1 here means that we are repeating/looping this
+    });
+    t.schedAbs(16, { arg beat, sec; 
+    	" ****  tempochange on beat : ".post; beat.postln; 
+    	t.tempo_(150/60); // 150 bpm
+    });
+    5.do({ |i| // on beats 32, 36, 40, 44, 48 
+    	t.schedAbs(32+(i*4), { arg beat, sec;
+    		" ****  tempo is now : ".post; (150-(10*(i+1))).post; " BPM".postln; 
+    		t.tempo_((150-(10*(i+1)))/60); // going down by 10 bpm each time
+    	});
+    });
+    t.schedAbs(60, { arg beat; t.tempo_(200/60) }); // 200 bpm
+    t.schedAbs(76, { arg beat;
+    	t.clear;
+    	t.schedAbs(t.beats.ceil, { arg beat, sec; 
+    		"beat : ".post; beat.postln;
+    		if (beat % 4==0, { Synth(\sine, [\freq, 67.midicps]) });
+    		if (beat % 4==2, { Synth(\sine, [\freq, 74.midicps]) });
+    		if (beat % 0==0, { Synth(\sine, [\freq, 79.midicps]) });
+    		1 // 1 here means that we are repeating/looping this
+    	});
+    	t.schedAbs(92, { arg beat; t.stop }); // stop it!
+    }); // 200 bpm
+    t.schedAbs(92, { arg beat; t.stop }); // if we tried to stop it here, it would have been "cleared"
+    )
 
 ## A survey of Patterns
 
