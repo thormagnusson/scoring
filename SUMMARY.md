@@ -22,4 +22,5 @@
    * [Busses, Nodes, Groups and Signal Flow](PartIII/chapter14.md)
 * [Musical Patterns on SC Server](PartIV/chapter15.md)
 * [Musical Patterns in SC Lang](PartIV/chapter16.md)
+* Part IV - Composition
 
