@@ -548,49 +548,37 @@ rendering the pattern as soundfile to disk (it will be written to your SuperColl
     );
 
 
+## TempoClock and Patterns
 
+To chage the tempo of the above Patterns, you can use the default TempoClock (as you didn't register a TempoClock for the pattern)
 
+    TempoClock.default.tempo = 1.2
 
+But if you want to have each pattern playing different TempoClocks, you need to create 2 clocks and use them to drive each pattern. (this way one can do some nice phasing/polyrhytmic stuff)
 
-// 3) ========= TempoClock and Patterns ==========
+    (
+    t = TempoClock.new;
+    u = TempoClock.new;
+    Pdef(\p04b).play(t);
+    Pdef(\p04c).play(u);
+    u.tempo = 1.5
+    )
 
+it's hard to get this clear as they are running the same pitch patterns so let's redefine one of the patterns:
 
-
-
-
-// to chage the tempo of the above Patterns, you can use the default TempoClock
-// (as you didn't register a TempoClock for the pattern)
-
-
-TempoClock.default.tempo = 1.2
-
-// But if you want to have each pattern playing different TempoClocks, 
-// you need to create 2 clocks and use them to drive each pattern.
-// (this way one can do some nice phasing/polyrhytmic stuff)
-
-(
-t = TempoClock.new;
-u = TempoClock.new;
-Pdef(\p04b).play(t);
-Pdef(\p04c).play(u);
-u.tempo = 1.5
-)
-
-// it's hard to get this clear as they are running the same pitch patterns so let's
-// redefine one of the patterns:
-(
-Pdef(\p04c, 
-		Pbind(\instrument, \synth1,
-					\freq, (Pseq.new(~scale.scramble, inf)).midicps*2, // freq arg
-					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
-		)
-)
-)
-// and try to change the tempo 
-u.tempo = 1;
-u.tempo = 1.2;
-u.tempo = 1.8;
-u.tempo = 3.2;
+    (
+    Pdef(\p04c, 
+    		Pbind(\instrument, \synth1,
+    					\freq, (Pseq.new(~scale.scramble, inf)).midicps*2, // freq arg
+    					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
+    		)
+    )
+    )
+    // and try to change the tempo 
+    u.tempo = 1;
+    u.tempo = 1.2;
+    u.tempo = 1.8;
+    u.tempo = 3.2;
 
 
 
