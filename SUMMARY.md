@@ -8,5 +8,5 @@
 * [Chapter 3](PartI/chapter_3.md)
 * [Chapter 4](PartI/chapter_4.md)
 * [Chapter 5](PartII/chapter_5.md)
-* Part I - The Fundamentals
+* [Part I - The Fundamentals](part_i_-_the_fundamentals.md)
 
