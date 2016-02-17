@@ -25,6 +25,6 @@
    * [Musical Patterns in SC Lang](PartIV/chapter16.md)
    * [ProxySpace and JIT lib](PartIV/chapter17.md)
    * [Tuning Systems and Scales](PartIV/chapter18.md)
-* [Extending SuperCollider](PartV/chapter19.md)
 * [Part V - Other](part_v_-_other.md)
+    * [Extending SuperCollider](PartV/chapter19.md)
 
