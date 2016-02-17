@@ -1,2 +1,1 @@
-# chapter_7
-
+# Subtractive Synthesis
