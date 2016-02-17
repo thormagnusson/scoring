@@ -1,3 +1,1 @@
-# Chapter 5
-
-sdf
+# Additive Synthesis
