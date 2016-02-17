@@ -219,14 +219,12 @@ Not all sounds are harmonic. Many musical instruments are **inharmonic**, for ex
 
 Try to run this a few times. What we hear is a wave form that might be quite similar to a bell at first, but then the resemblance disappears, because the partials do not fade out. If we add an envelope to each of these sinusoids, we get a different sound:
 
-{line-numbers=off}
-~~~~~~~
-{
-Mix.fill( 10, { 	
-	SinOsc.ar(rrand(200, 700), 0, 0.1) 
-	* EnvGen.ar(Env.perc(0.0001, rrand(2, 6))) 
-});
-}.play
+    {
+    Mix.fill( 10, { 	
+    	SinOsc.ar(rrand(200, 700), 0, 0.1) 
+    	* EnvGen.ar(Env.perc(0.0001, rrand(2, 6))) 
+    });
+    }.play
 ~~~~~~~
 
 Above we are using Mix.fill instead of creating an array with ! and then .summing it. These two examples do the same thing, but it is good for the student of SuperCollider to learn different ways of reading and writing code.
