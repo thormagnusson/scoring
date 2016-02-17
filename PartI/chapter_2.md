@@ -124,23 +124,18 @@ A SynthDef is a pre-compiled graph of unit generators. This graph is written to 
 
 It is recommended that the SynthDef help file is read carefully and properly understood. The SynthDef is a key class of SuperCollider and very important. It adds synths to the server or writes synth definition files to the disk, amongst many other things. Let's start by exploring how we can turn a unit generator graph function into a synth definition:
 
-{line-numbers=off}
-~~~~~~~
-// this simple synth
-{Saw.ar(440)}.play
-// becomes this synth definition
-SynthDef(\mysaw, {
-	Out.ar(0, Saw.ar(440));
-}).add;
-~~~~~~~
+
+    // this simple synth
+    {Saw.ar(440)}.play
+    // becomes this synth definition
+    SynthDef(\mysaw, {
+    	Out.ar(0, Saw.ar(440));
+    }).add;
 
 You notice that we have done two things: given the function a name (\mysaw), and we've wrapped our saw wave in an 'Out' UGen which defines which 'Bus' the audio is sent to. If you have an 8 channel sound card, you could send audio to any bus from 0 to 7. You could also send it to bus number 20, but we would not be able to hear it then. However, we could put another synth there that routes the audio back onto audio card busses, for example 0-7.
 
-{line-numbers=off}
-~~~~~~~
-// you can use the 'Out' UGen in Function:play
-{Out.ar(1, Saw.ar(440))}.play // out on the right speaker
-~~~~~~~
+    // you can use the 'Out' UGen in Function:play
+    {Out.ar(1, Saw.ar(440))}.play // out on the right speaker
 
 NOTE: There is a difference in the Function-play code and the SynthDef, in that 
 we need the Out Ugen in a synth definition to tell the server
@@ -148,113 +143,93 @@ which audiobus the sound should go out of. (0 is left, 1 is right)
 
 But back to our SynthDef, we can now try to instantiate it, and create a Synth. (A Synth is an instantiation (child) of a SynthDef). This synth can then be controlled if we reference it with a variable.
 
-{line-numbers=off}
-~~~~~~~
-// create a synth and put it into variable 'a'
-a = Synth(\mysaw);
-// create another synth and put it into variable 'b'
-b = Synth(\mysaw);
-a.free; // kill a
-b.free; // kill b
-~~~~~~~
+    // create a synth and put it into variable 'a'
+    a = Synth(\mysaw);
+    // create another synth and put it into variable 'b'
+    b = Synth(\mysaw);
+    a.free; // kill a
+    b.free; // kill b
 
 This is obviously not a very interesting synth. It is 'hardcoded', i.e., the parameters in it (such as frequency and amplitude) are static and we can't change them. This is only done in very specific situations, as normally we would like to specify the values of our synth both when initialising the synth and after it has been started. 
 
 In order to open the SynthDef up for specified parameters and enabling it to be changed, we need to put arguments into the UGen function graph. Remember in chapter 1 how we created a function with arguments:
 
-{line-numbers=off}
-~~~~~~~
-f = {arg a, b; 
-	c = a + b; 
-	postln("c is now: " + c)
-};
-f.value(2, 3);
-~~~~~~~
+    f = {arg a, b; 
+    	c = a + b; 
+    	postln("c is now: " + c)
+    };
+    f.value(2, 3);
 
 Note that you can't write 'f.value', as you will get an error trying to add 'nil' to 'nil' ('a' and 'b' are both nil in the arg slots in the function. To solve that we can give them default values:
 
-{line-numbers=off}
-~~~~~~~
-f = {arg a=2, b=3; 
-	c = a + b; 
-	postln("c is now: " + c)
-};
-f.value(22, 33);
-f.value;
-~~~~~~~
+    f = {arg a=2, b=3; 
+    	c = a + b; 
+    	postln("c is now: " + c)
+    };
+    f.value(22, 33);
+    f.value;
 
 So we add the arguments for the synthdef, and we add a Pan2 UGen that enables us to pan the sound from the left (-1) to the right (1). The centre is 0:
 
-{line-numbers=off}
-~~~~~~~
-SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0;
-	Out.ar(0, Pan2.ar(Saw.ar(freq, amp), pan));
-}).add;
-// this now allows us to create a new synth:
-a = Synth(\mysaw); // explore the Synth help file
-// and control it, using the .set, method of the Synth:
-a.set(\freq, 220);
-a.set(\amp, 0.8);
-a.set(\freq, 555, \amp, 0.4, \pan, -1);
-~~~~~~~
+
+    SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0;
+    	Out.ar(0, Pan2.ar(Saw.ar(freq, amp), pan));
+    }).add;
+    // this now allows us to create a new synth:
+    a = Synth(\mysaw); // explore the Synth help file
+    // and control it, using the .set, method of the Synth:
+    a.set(\freq, 220);
+    a.set(\amp, 0.8);
+    a.set(\freq, 555, \amp, 0.4, \pan, -1);
 
 This synth definition could be written better and more understandable. Let's say we were to add a filter to the synth, it might look like this:
 
-{line-numbers=off}
-~~~~~~~
-SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0, cutoff=880, rq=0.3;
-	Out.ar(0, Pan2.ar(RLPF.ar(Saw.ar(freq, amp), pan), cutoff, rq));
-}).add;
-~~~~~~~
+    SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0, cutoff=880, rq=0.3;
+    	Out.ar(0, Pan2.ar(RLPF.ar(Saw.ar(freq, amp), pan), cutoff, rq));
+    }).add;
 
 But this is starting to be hard to read. Let us make the SynthDef easier to read (although for the computer it is the same, as it only cares about where the semicolons (;) are).
 
-{line-numbers=off}
-~~~~~~~
-// the same as above, but more readable
-SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0, cutoff=880, rq=0.3;
-	var signal, filter, panned;
-	signal = Saw.ar(freq, amp);
-	filter = RLPF.ar(signal, cutoff, rq);
-	panned = Pan2.ar(filter, pan);
-	Out.ar(0, panned);
-}).add;
-~~~~~~~
+
+    // the same as above, but more readable
+    SynthDef(\mysaw, { arg freq=440, amp=0.2, pan=0, cutoff=880, rq=0.3;
+    	var signal, filter, panned;
+    	signal = Saw.ar(freq, amp);
+    	filter = RLPF.ar(signal, cutoff, rq);
+    	panned = Pan2.ar(filter, pan);
+    	Out.ar(0, panned);
+    }).add;
+
 
 This is roughly how you will write and see other people write synth definitions from now on. The individual parts of a UGen graph are typically put into variables to be more human readable and easier to understand. The exception are SuperCollider tweets (#supercollider) where we have the 140 character limit. We can now explore the synth definition a bit more:
 
-{line-numbers=off}
-~~~~~~~
-a = Synth(\mysaw); // we create a synth with the default arguments
-b = Synth(\mysaw, [\freq, 880, \cutoff, 12000]); // we pass arguments
-a.set(\cutoff, 500);
-b.set(\freq, 444);
-a.set(\freq, 1000, \cutoff, 1200);
-b.set(\cutoff, 4000);
-b.set(\rq, 0.1);
-~~~~~~~
 
+    a = Synth(\mysaw); // we create a synth with the default arguments
+    b = Synth(\mysaw, [\freq, 880, \cutoff, 12000]); // we pass arguments
+    a.set(\cutoff, 500);
+    b.set(\freq, 444);
+    a.set(\freq, 1000, \cutoff, 1200);
+    b.set(\cutoff, 4000);
+    b.set(\rq, 0.1);
 
 ## Observing server activity (Poll, Scope and FreqScope)
 
 SuperCollider has various ways to explore what is happening on the server, in addition to the most obvious one: sound itself. Due to the separation between the SC server and the sc-lang, this means that data has to be sent from the server and back to the language, since it's the language that prints or displays the data. The server is just a lean mean sound machine and doesn't care about anything else. Firstly we can try to poll (get) the data from a UGen and post it to the post window:
 
-{line-numbers=off}
-~~~~~~~
-// we can explore the output of the SinOsc
-{SinOsc.ar(1).poll}.play // you won't be able to hear this
-// and compare to white noise:
-{WhiteNoise.ar(1).poll}.play // the first arg of noise is amplitude
-// we can explore the mouse:
-{MouseX.kr(10, 1000).poll}.play // nothing to hear
+    // we can explore the output of the SinOsc
+    {SinOsc.ar(1).poll}.play // you won't be able to hear this
+    // and compare to white noise:
+    {WhiteNoise.ar(1).poll}.play // the first arg of noise is amplitude
+    // we can explore the mouse:
+    {MouseX.kr(10, 1000).poll}.play // nothing to hear
+    
+    // we can poll the frequency of a sound:
+    {SinOsc.ar(LFNoise2.ar(1).range(100, 1000).poll)}.play
+    // or we poll the amplitude of it
+    {SinOsc.ar(LFNoise2.ar(1).range(100, 1000)).poll}.play
+    // and we can add a label (first arg is poll rate, second is label)
+    {SinOsc.ar(LFNoise2.ar(1).range(100, 1000).poll(10, "freq"))}.play
 
-// we can poll the frequency of a sound:
-{SinOsc.ar(LFNoise2.ar(1).range(100, 1000).poll)}.play
-// or we poll the amplitude of it
-{SinOsc.ar(LFNoise2.ar(1).range(100, 1000)).poll}.play
-// and we can add a label (first arg is poll rate, second is label)
-{SinOsc.ar(LFNoise2.ar(1).range(100, 1000).poll(10, "freq"))}.play
-~~~~~~~
 
 People often use poll to explore what is happening in the synth, to debug, or try to understand why something is not working. But it is typically not used in a concrete situation (XXX rephrase?). Another way to explore the server state is to use scope:
 
