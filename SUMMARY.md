@@ -16,4 +16,5 @@
    * [Samples and Buffers](PartII/chapter9.md)
    * [Granular Synthesis](PartII/chapter10.md)
    * [Physical Modelling](PartII/chapter11.md)
+* chapter12
 
