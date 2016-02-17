@@ -394,37 +394,35 @@ SuperCollider is an extremely wide and flexible language. It is profoundly deep 
 
 ProxySpace is one such area. It makes live coding and various on line coding extremely flexible. Effects can be routed in and out of proxies, and source changed. Below you will find a quick examples that are useful when testing UGens or making prototypes for synths that you will write as synthdefs later. ProxySpace is also often used in live coding. Evaluate the code below line by line:
 
-{line-numbers=off}
-~~~~~~~
-p= ProxySpace.push(s.boot)
-
-~signal.play;
-~signal.fadeTime_(2) // fading in and out in 2 secs
-~signal= {SinOsc.ar(400, 0, 1)!2}
-~signal= {SinOsc.ar([400, 404], 0, LFNoise0.kr(4))}
-~signal= {Saw.ar([400, 404],  LFNoise0.kr(4))}
-~signal= {Saw.ar([400, 404],  Pulse.ar(2))}
-~signal= {Saw.ar([400, 404],  Pulse.ar(Line.kr(1, 30, 20)))}
-~signal= {LFSaw.ar([400, 404],  LFNoise0.kr(4))}
-~signal= {Pulse.ar([400, 404],  LFNoise0.kr(4))}
-~signal= {Blip.ar([400, 404],  12, Pulse.ar(2))}
-~signal= {Blip.ar([400, 404],  24, LFNoise0.kr(4))}
-~signal= {Blip.ar([400, 404],  4, LFNoise0.kr(4))}
-~signal= {Blip.ar([400, 404],  MouseX.kr(4, 40), LFNoise0.kr(4))}
-~signal= {Blip.ar([200, 204],  5, Pulse.ar(1))}
-
-// now let's try to add some effects 
-
-~signal[1] = \filter -> {arg sig; (sig*0.6)+FreeVerb.ar(sig, 0.85, 0.86, 0.3)}; // reverb
-~signal[2] = \filter -> {arg sig; sig + AllpassC.ar(sig, 1, 0.15, 1.3 )}; // delay
-~signal[3] = \filter -> {arg sig; (sig * SinOsc.ar(2.1, 0, 5.44, 0))*0.5}; // tremolo
-~signal[4] = \filter -> {arg sig; PitchShift.ar(sig, 0.008, SinOsc.ar(2.1, 0, 0.11, 1))}; // pitchshift
-~signal[5] = \filter -> {arg sig; (3111.33*sig.distort/(1+(2231.23*sig.abs))).distort*0.2}; // distort
-~signal[1] = nil;
-~signal[2] = nil;
-~signal[3] = nil;
-~signal[4] = nil;
-~signal[5] = nil;
+    p= ProxySpace.push(s.boot)
+    
+    ~signal.play;
+    ~signal.fadeTime_(2) // fading in and out in 2 secs
+    ~signal= {SinOsc.ar(400, 0, 1)!2}
+    ~signal= {SinOsc.ar([400, 404], 0, LFNoise0.kr(4))}
+    ~signal= {Saw.ar([400, 404],  LFNoise0.kr(4))}
+    ~signal= {Saw.ar([400, 404],  Pulse.ar(2))}
+    ~signal= {Saw.ar([400, 404],  Pulse.ar(Line.kr(1, 30, 20)))}
+    ~signal= {LFSaw.ar([400, 404],  LFNoise0.kr(4))}
+    ~signal= {Pulse.ar([400, 404],  LFNoise0.kr(4))}
+    ~signal= {Blip.ar([400, 404],  12, Pulse.ar(2))}
+    ~signal= {Blip.ar([400, 404],  24, LFNoise0.kr(4))}
+    ~signal= {Blip.ar([400, 404],  4, LFNoise0.kr(4))}
+    ~signal= {Blip.ar([400, 404],  MouseX.kr(4, 40), LFNoise0.kr(4))}
+    ~signal= {Blip.ar([200, 204],  5, Pulse.ar(1))}
+    
+    // now let's try to add some effects 
+    
+    ~signal[1] = \filter -> {arg sig; (sig*0.6)+FreeVerb.ar(sig, 0.85, 0.86, 0.3)}; // reverb
+    ~signal[2] = \filter -> {arg sig; sig + AllpassC.ar(sig, 1, 0.15, 1.3 )}; // delay
+    ~signal[3] = \filter -> {arg sig; (sig * SinOsc.ar(2.1, 0, 5.44, 0))*0.5}; // tremolo
+    ~signal[4] = \filter -> {arg sig; PitchShift.ar(sig, 0.008, SinOsc.ar(2.1, 0, 0.11, 1))}; // pitchshift
+    ~signal[5] = \filter -> {arg sig; (3111.33*sig.distort/(1+(2231.23*sig.abs))).distort*0.2}; // distort
+    ~signal[1] = nil;
+    ~signal[2] = nil;
+    ~signal[3] = nil;
+    ~signal[4] = nil;
+    ~signal[5] = nil;
 ~~~~~~~
 
 Another ProxySpace example:
