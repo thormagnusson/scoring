@@ -36,10 +36,8 @@ Let us play a little with this code (hit Cmd/Ctrl+period (Cmd+.) to stop the sou
 
 What happened here? We are listening to a sine wave oscillator of 880 Hz, or cycles per second. The sine wave oscillator is what is called in most sound programming languages a “unit generator” and it outputs samples according to specific algorithms. So a SinOsc will output samples in different way than a Saw. Furthermore, in the code above we are using the output of one oscillator to multiply parameters of another. But the question arises: which parameters? What is that comma after 880 and the stuff appearing after it?
 
-T>## Using the Documentation
-T>
-T> In order to understand what these arguments to the SinOsc are, highlight the 
-T> SinOsc word and hit Cmd+d. This will call up the documentation file of this unit generator. You will see that the first argument is the frequency (freq), the second is the phase, and the third is multiplication (mul), or amplitude (since if you multiply a signal with a number you are changing its amplitude).
+## Using the Documentation
+In order to understand what these arguments to the SinOsc are, highlight the **SinOsc** word and hit Cmd+d. This will call up the documentation file of this unit generator. You will see that the first argument is the frequency (freq), the second is the phase, and the third is multiplication (mul), or amplitude (since if you multiply a signal with a number you are changing its amplitude).
 
 Finally, what we have listened to is a sine wave of 880 Hz, with respective amplitudes of 1 and 0.5. And this is important: signals sent to the sound card of your computer are typically consisting of samples of values between −1 and 1 in amplitude. If the signal is above 1 or below −1, you typically get what is called “clipping” and the sound most likely becomes distorted.
 
@@ -48,6 +46,10 @@ You might also have noticed the information given to you at the bottom of the ID
 ## About the Installation
 
 You have now installed and explored SuperCollider on your system. This book does not cover how to install SuperCollider on the different operating systems, but we should note that on any SuperCollider installation, a user specific area is created where you can install your classes, find the synth definitions you have created, and install SC-plugins. This is in your user directory:
-Mac: ~/Library/Application Support/SuperCollider
-Linux: 
-Windows:
+
+Mac: ~/Library/Application Support/SuperCollider  
+Linux:  
+Windows:  
+
+
+
