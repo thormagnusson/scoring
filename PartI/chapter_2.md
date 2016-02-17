@@ -233,38 +233,32 @@ SuperCollider has various ways to explore what is happening on the server, in ad
 
 People often use poll to explore what is happening in the synth, to debug, or try to understand why something is not working. But it is typically not used in a concrete situation (XXX rephrase?). Another way to explore the server state is to use scope:
 
-{line-numbers=off}
-~~~~~~~
-// we can explore the output of the SinOsc
-{SinOsc.ar(1)}.scope // you won't be able to hear this
-// and compare to white noise:
-{WhiteNoise.ar(1)}.scope // the first arg of noise is amplitude
-// we can scope the mouse state (but note the control rate):
-{MouseX.kr(-1, 1)}.scope // nothing to hear
-// the range method maps the output from -1 to 1 into 100 to 1000
-{SinOsc.ar(LFNoise2.ar(1).range(100, 1000))}.scope;
-// same here, we explore the saw wave form at different frequencies
-{Saw.ar(220*SinOsc.ar(0.5).range(1, 10))}.scope
-~~~~~~~
+    // we can explore the output of the SinOsc
+    {SinOsc.ar(1)}.scope // you won't be able to hear this
+    // and compare to white noise:
+    {WhiteNoise.ar(1)}.scope // the first arg of noise is amplitude
+    // we can scope the mouse state (but note the control rate):
+    {MouseX.kr(-1, 1)}.scope // nothing to hear
+    // the range method maps the output from -1 to 1 into 100 to 1000
+    {SinOsc.ar(LFNoise2.ar(1).range(100, 1000))}.scope;
+    // same here, we explore the saw wave form at different frequencies
+    {Saw.ar(220*SinOsc.ar(0.5).range(1, 10))}.scope
+
 
 The scope shows amplitude over time, that is: the horizontal axis is **time** and the vertical axis is **amplitude**. This is often called a time-domain view of the signal. But we can also explore the frequency content of the sound, a view we call frequency-domain view. This is achieved by performing an FFT analysis of the signal which is then displayed to the scope (don't worry, this happens 'under the hood' and we'll learn about this in chapter XXX). Now let's explore the freqscope:
 
-{line-numbers=off}
-~~~~~~~
-// we see the wave at 1000 Hz, with amplitude modulated
-{SinOsc.ar(1000, 0, SinOsc.ar(0.25))}.freqscope
-// some white noise again:
-{WhiteNoise.ar(1)}.freqscope // random values throughout the spectrum
-// and we can now experienc the power of the scope
-{RLPF.ar(WhiteNoise.ar(1), MouseX.kr(20, 12000), MouseY.kr(0.01, 0.99))}.freqscope
-// we can now explore various wave forms:
-{Saw.ar(440*XLine.ar(1, 10, 5))}.freqscope // check the XLine helpfile
-// LFTri is a non-bandlimited UGen, so explore the mirroring or 'aliasing'
-{LFTri.ar(440*XLine.ar(1, 10, 25))}.freqscope
-~~~~~~~
+    // we see the wave at 1000 Hz, with amplitude modulated
+    {SinOsc.ar(1000, 0, SinOsc.ar(0.25))}.freqscope
+    // some white noise again:
+    {WhiteNoise.ar(1)}.freqscope // random values throughout the spectrum
+    // and we can now experienc the power of the scope
+    {RLPF.ar(WhiteNoise.ar(1), MouseX.kr(20, 12000), MouseY.kr(0.01, 0.99))}.freqscope
+    // we can now explore various wave forms:
+    {Saw.ar(440*XLine.ar(1, 10, 5))}.freqscope // check the XLine helpfile
+    // LFTri is a non-bandlimited UGen, so explore the mirroring or 'aliasing'
+    {LFTri.ar(440*XLine.ar(1, 10, 25))}.freqscope
 
 Futhermore, there is a Spectrogram Quark that shows a spectrogram view of the audio signal, but this is not part of the SuperCollider distribution. However, it's easy to install and we will cover this in the chapter on the Quarks.
-
 
 ## A quick intro to busses and multichannel expansion
 
@@ -274,39 +268,33 @@ Chapter XXX will go deeper into busses, groups, and how to route the audio signa
 
 We can see that by default SuperCollider has 8 output channels, 8 input channels, and 112 private audio bus channels (where we can run effects and other things). This means that if you have an 8 channel sound card, you can send a signal out on any of the first 8 busses. If you have a 16 channel sound card, you need to enter the ServerOptions class and change the 'numOutputBusChannels' variable to 16. More on that later, but let's now look at some examples:
 
-{line-numbers=off}
-~~~~~~~
-// sound put out on different busses
-{ Out.ar(0, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // left speaker (bus 0)
-{ Out.ar(1, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // right speaker (bus 1)
-{ Out.ar(2, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // third speaker (bus 2)
-
-// Pan2 makes takes the signal and converts it into an array of two signals
-{ Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
-// or we can play it out on bus 6 (and you probably won't hear it)
-{ Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
-// but the above is the same as:
-{ a = PinkNoise.ar(1); Out.ar(0, [a, a]) }.scope(8)
-// and (where the first six channels are silent):
-{ a = PinkNoise.ar(1); Out.ar(0, [0, 0, 0, 0, 0, 0, a, a]) }.scope(8)
-// however, it's not the same as:
-{ Out.ar(0, [PinkNoise.ar(1), PinkNoise.ar(1)]) }.scope(8)
-// why not? -> because we now have TWO signals rather than one
-~~~~~~~
+    // sound put out on different busses
+    { Out.ar(0, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // left speaker (bus 0)
+    { Out.ar(1, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // right speaker (bus 1)
+    { Out.ar(2, LFPulse.ar(220, 0, 0.5, 0.3)) }.play; // third speaker (bus 2)
+    
+    // Pan2 makes takes the signal and converts it into an array of two signals
+    { Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
+    // or we can play it out on bus 6 (and you probably won't hear it)
+    { Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
+    // but the above is the same as:
+    { a = PinkNoise.ar(1); Out.ar(0, [a, a]) }.scope(8)
+    // and (where the first six channels are silent):
+    { a = PinkNoise.ar(1); Out.ar(0, [0, 0, 0, 0, 0, 0, a, a]) }.scope(8)
+    // however, it's not the same as:
+    { Out.ar(0, [PinkNoise.ar(1), PinkNoise.ar(1)]) }.scope(8)
+    // why not? -> because we now have TWO signals rather than one
 
 It is thus clear how the busses of the server are represented by an array containing signals (as in: [signal, signal, signal, signal, etc.]). We can now take a mono signal and 'expand' it into other busses. This is called multichannel expansion:
 
-{line-numbers=off}
-~~~~~~~
-{ SinOsc.ar(440) }.scope(8)
-{ [SinOsc.ar(440), SinOsc.ar(880)] }.scope(8)
-// same as:
-{ SinOsc.ar([440, 880]) }.scope(8)
-// a trick to 'expand into an array'
-{ SinOsc.ar(440) ! 2 }.scope(8)
-// if that was strange, check this:
-123 ! 30
-~~~~~~~
+    { SinOsc.ar(440) }.scope(8)
+    { [SinOsc.ar(440), SinOsc.ar(880)] }.scope(8)
+    // same as:
+    { SinOsc.ar([440, 880]) }.scope(8)
+    // a trick to 'expand into an array'
+    { SinOsc.ar(440) ! 2 }.scope(8)
+    // if that was strange, check this:
+    123 ! 30
 
 Enough of this. We will explore busses and audio signal routing in chapter XXX later. However, it is important to understand this at the current stage.
 
@@ -315,100 +303,87 @@ Enough of this. We will explore busses and audio signal routing in chapter XXX l
 
 As we have discussed, the SuperCollider language and server are two separate applications. They communicate through the OSC protocol. This means that the communication between the two is **asynchronous**, or in other words, that you can't know precisely how long it takes for a message to arrive. If we would like to do something with audio data in the language, such as visualising it, posting it, or such, we need to send a message to the server and wait for it to respond back. This can happen in various ways, but a typical way of doing this is to use the SendTrig Ugen:
 
-{line-numbers=off}
-~~~~~~~
-// this is happening in the language
-OSCdef(\listener, {arg msg, time, addr, recvPort; msg.postln; }, '/tr', n);
-// and this happens in the server
-{
-	var freq;
-	freq = LFSaw.ar(0.75, 0, 100, 900);
-	SendTrig.kr(Impulse.kr(10), 0, freq);
-	SinOsc.ar(freq, 0, 0.5)
-}.play 
-~~~~~~~
+
+    // this is happening in the language
+    OSCdef(\listener, {arg msg, time, addr, recvPort; msg.postln; }, '/tr', n);
+    // and this happens in the server
+    {
+    	var freq;
+    	freq = LFSaw.ar(0.75, 0, 100, 900);
+    	SendTrig.kr(Impulse.kr(10), 0, freq);
+    	SinOsc.ar(freq, 0, 0.5)
+    }.play 
 
 What we see above is the SendTrig, sending 10 messages every second to the language (the Impulse triggers those messages). It sends a '/tr' OSC message to port 57120 locally. (Don't worry, we'll explore this later in a chapter on OSC). The OSCdef then has a function that posts the message from the server.
 
-{line-numbers=off}
-~~~~~~~
-// this is happening in the language
-OSCdef(\listener, {arg msg, time, addr, recvPort; msg.postln; }, '/tr', n);
-// and this happens on the server
-{
-	var freq;
-	freq = LFSaw.ar(0.75, 0, 100, 900);
-	SendTrig.kr(Impulse.kr(10), 0, freq);
-	SinOsc.ar(freq, 0, 0.5)
-}.play 
-~~~~~~~
+    // this is happening in the language
+    OSCdef(\listener, {arg msg, time, addr, recvPort; msg.postln; }, '/tr', n);
+    // and this happens on the server
+    {
+    	var freq;
+    	freq = LFSaw.ar(0.75, 0, 100, 900);
+    	SendTrig.kr(Impulse.kr(10), 0, freq);
+    	SinOsc.ar(freq, 0, 0.5)
+    }.play 
 
 A little bit more complex example might involve a GUI (Graphical User Interfaces are part of the language) and synthesis on the server:
 
-{line-numbers=off}
-~~~~~~~
-(
-// this is happening in the language
-var win, freqslider, mouseslider;
-win = Window.new.front;
-freqslider = Slider(win, Rect(20, 10, 40, 280));
-mouseslider = Slider2D(win, Rect(80, 10, 280, 280));
-
-OSCdef(\sliderdef, {arg msg, time, addr, recvPort; 
-	{freqslider.value_(msg[3].linlin(600, 1400, 0, 1))}.defer; 
-}, '/slider', n); // the OSC message we listen to
-OSCdef(\sliderdef2D, {arg msg, time, addr, recvPort; 
-	{ mouseslider.x_(msg[3]); mouseslider.y_(msg[4]); }.defer; 
-}, '/slider2D', n); // the OSC message we listen to
-	
-// and this happens on the server
-{
-	var mx, my, freq;
-	freq = LFSaw.ar(0.75, 0, 400, 1000); // outputs 600 to 1400 Hz. Why?
-	mx = LFNoise2.kr(2).range(0,1);
-	my = LFNoise2.kr(2).range(0, 1);
-	SendReply.kr(Impulse.kr(10), '/slider', freq); // sending the OSC message 
-	SendReply.kr(Impulse.kr(10), '/slider2D', [mx, my]); 
-	(SinOsc.ar(freq, 0, 0.5)+RLPF.ar(WhiteNoise.ar(0.3), mx.range(100, 3000), my))!2 ;
-}.play;
- )
-~~~~~~~
+    (
+    // this is happening in the language
+    var win, freqslider, mouseslider;
+    win = Window.new.front;
+    freqslider = Slider(win, Rect(20, 10, 40, 280));
+    mouseslider = Slider2D(win, Rect(80, 10, 280, 280));
+    
+    OSCdef(\sliderdef, {arg msg, time, addr, recvPort; 
+    	{freqslider.value_(msg[3].linlin(600, 1400, 0, 1))}.defer; 
+    }, '/slider', n); // the OSC message we listen to
+    OSCdef(\sliderdef2D, {arg msg, time, addr, recvPort; 
+    	{ mouseslider.x_(msg[3]); mouseslider.y_(msg[4]); }.defer; 
+    }, '/slider2D', n); // the OSC message we listen to
+    	
+    // and this happens on the server
+    {
+    	var mx, my, freq;
+    	freq = LFSaw.ar(0.75, 0, 400, 1000); // outputs 600 to 1400 Hz. Why?
+    	mx = LFNoise2.kr(2).range(0,1);
+    	my = LFNoise2.kr(2).range(0, 1);
+    	SendReply.kr(Impulse.kr(10), '/slider', freq); // sending the OSC message 
+    	SendReply.kr(Impulse.kr(10), '/slider2D', [mx, my]); 
+    	(SinOsc.ar(freq, 0, 0.5)+RLPF.ar(WhiteNoise.ar(0.3), mx.range(100, 3000), my))!2 ;
+    }.play;
+     )
 
 We could also write values to a control bus on the server, from which we can read in the language. Here is an example:
 
-{line-numbers=off}
-~~~~~~~
-b = Bus.control(s,1); // we create a control bus
-{Out.kr(b, MouseX.kr(20,22000))}.play // and we write the output of some UGen to the bus
-b.get({arg val; val.postln;}); // we poll the puss from the language
-// or even:
-fork{loop{ b.get({arg val; val.postln;});0.1.wait; }}
-~~~~~~~
+
+    b = Bus.control(s,1); // we create a control bus
+    {Out.kr(b, MouseX.kr(20,22000))}.play // and we write the output of some UGen to the bus
+    b.get({arg val; val.postln;}); // we poll the puss from the language
+    // or even:
+    fork{loop{ b.get({arg val; val.postln;});0.1.wait; }}
 
 Check the source of Bus (by hitting Cmd+I) and locate the .get method. You will see that the Bus .get method is using an OSCresponder (XXX is that the case in 3.6?) underneath. It is therefore "asynchronous", meaning that it will not happen in the linear order of your code. (The language is asking server for the value, and the server then sends back to language. This takes time).
 
 Here is a program that demonstrates the asynchronous nature of b.get. The {}.play from above has to be running. Note how the numbered lines of code appear in the post window "in the wrong order"! (Instead of a synchronous posting of 1, 2 and 3, we get the order of 1, 3 and 2). It takes between 0.1 and 10 milliseconds to get the value on a 2.8 GHz Intel computer.
 
-{line-numbers=off}
-~~~~~~~
-(
-x = 0; y= 0;
-b = Bus.control(s,1); // we create a control bus
-{Out.kr(b, MouseX.kr(20,22000))}.play;
-t = Task({
-	inf.do({
-		"1 - before b.get : ".post; x = Main.elapsedTime.postln;
-		b.get({|val| 	
-			"2 - ".post; val.postln; 
-			y = Main.elapsedTime.postln;
-			"the asynchronious process took : ".post; (y-x).post; " seconds".postln;
-		}); //  this value is returned AFTER the next line
-		"3 - after b.get : ".post;  Main.elapsedTime.postln;
-		0.5.wait;
-	})
-}).play;
-)
-~~~~~~~
+    (
+    x = 0; y= 0;
+    b = Bus.control(s,1); // we create a control bus
+    {Out.kr(b, MouseX.kr(20,22000))}.play;
+    t = Task({
+    	inf.do({
+    		"1 - before b.get : ".post; x = Main.elapsedTime.postln;
+    		b.get({|val| 	
+    			"2 - ".post; val.postln; 
+    			y = Main.elapsedTime.postln;
+    			"the asynchronious process took : ".post; (y-x).post; " seconds".postln;
+    		}); //  this value is returned AFTER the next line
+    		"3 - after b.get : ".post;  Main.elapsedTime.postln;
+    		0.5.wait;
+    	})
+    }).play;
+    )
 
 This type of communication from the server to the language is not very common. The other way (from language to server) is however. This section is therefore not vital for your work in SuperCollider, but you will at some point stumble into the question of synchronous and asynchronous communication with the server and this section should prepare you for that.
 
