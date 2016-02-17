@@ -1,2 +1,2 @@
-# chapter_9
+# Samples and Buffers
 
