@@ -1,2 +1,2 @@
-# chapter16
+# Musical Patterns in SC Lang
 
