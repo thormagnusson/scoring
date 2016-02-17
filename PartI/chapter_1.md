@@ -1,2 +1,3 @@
-# Chapter 1
+# Chapter 1 - Basics of Coding in SuperCollider
+
 
