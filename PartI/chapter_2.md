@@ -367,24 +367,27 @@ Check the source of Bus (by hitting Cmd+I) and locate the .get method. You will 
 
 Here is a program that demonstrates the asynchronous nature of b.get. The {}.play from above has to be running. Note how the numbered lines of code appear in the post window "in the wrong order"! (Instead of a synchronous posting of 1, 2 and 3, we get the order of 1, 3 and 2). It takes between 0.1 and 10 milliseconds to get the value on a 2.8 GHz Intel computer.
 
-    (
-    x = 0; y= 0;
-    b = Bus.control(s,1); // we create a control bus
-    {Out.kr(b, MouseX.kr(20,22000))}.play;
-    t = Task({
-    	inf.do({
-    		"1 - before b.get : ".post; x = Main.elapsedTime.postln;
-    		b.get({|val| 	
-    			"2 - ".post; val.postln; 
-    			y = Main.elapsedTime.postln;
-    			"the asynchronious process took : ".post; (y-x).post; " seconds".postln;
-    		}); //  this value is returned AFTER the next line
+```
+(
+x = 0; y= 0;
+b = Bus.control(s,1); // we create a control bus
+{Out.kr(b, MouseX.kr(20,22000))}.play;
+t = Task({
+	inf.do({
+		"1 - before b.get : ".post; x = Main.elapsedTime.postln;
+		b.get({|val| 	
+			"2 - ".post; val.postln; 
+			y = Main.elapsedTime.postln;
+        	"the asynchronious process took : ".post; 
+        	(y-x).post; 
+        	" seconds".postln;
+        	}); //  this value is returned AFTER the next line
     		"3 - after b.get : ".post;  Main.elapsedTime.postln;
     		0.5.wait;
     	})
     }).play;
-    )
-
+)
+```
 This type of communication from the server to the language is not very common. The other way (from language to server) is however. This section is therefore not vital for your work in SuperCollider, but you will at some point stumble into the question of synchronous and asynchronous communication with the server and this section should prepare you for that.
 
 
