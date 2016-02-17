@@ -23,4 +23,5 @@
 * [Musical Patterns on SC Server](PartIV/chapter15.md)
 * [Musical Patterns in SC Lang](PartIV/chapter16.md)
 * [Part IV - Composition](part_iv_-_composition.md)
+* chapter17
 
