@@ -7,78 +7,63 @@ Last chapter discussed additive synthesis. The idea is start with silence and ad
 
 The definition of noise is a signal that is aperiodic, i.e., there is no periodic repetition of some form in the signal. If there was such repetition, we would talk about a wave form and then a frequency of those repetitions. The frequency becomes pitch or musical notes. Not so in the world of noise: there are no repetitions that we can detect and thus we perceive it as the opposite of a signal; the antithesis of a meaning. Most of us remember the white noise of a dead analogue TV channel. Anyway, although noise might for some have negative connotations, it is a very useful musical element, in particular for synthesis as a rich input signal. 
 
-{line-numbers=off}
-~~~~~~~
-// WhiteNoise
-{WhiteNoise.ar(0.4)}.plot(1)
-{WhiteNoise.ar(0.4)}.play
-{WhiteNoise.ar(0.4)}.scope
-{WhiteNoise.ar(0.4)}.freqscope
 
-// PinkNoise 
-{PinkNoise.ar(1)}.plot(1)
-{PinkNoise.ar(1)}.play
-{PinkNoise.ar(1)}.freqscope
+    // WhiteNoise
+    {WhiteNoise.ar(0.4)}.plot(1)
+    {WhiteNoise.ar(0.4)}.play
+    {WhiteNoise.ar(0.4)}.scope
+    {WhiteNoise.ar(0.4)}.freqscope
+    
+    // PinkNoise 
+    {PinkNoise.ar(1)}.plot(1)
+    {PinkNoise.ar(1)}.play
+    {PinkNoise.ar(1)}.freqscope
+    
+    // BrownNoise
+    {BrownNoise.ar(1)}.plot(1)
+    {BrownNoise.ar(1)}.play
+    {BrownNoise.ar(1)}.freqscope
 
-// BrownNoise
-{BrownNoise.ar(1)}.plot(1)
-{BrownNoise.ar(1)}.play
-{BrownNoise.ar(1)}.freqscope
+Take a look at the source file called Noise.sc (or hit Apple+Y on WhiteNoise). You will find lots of interesting noise generators. For example these:
 
-// Take a look at the source file called Noise.sc (or hit Apple+Y on WhiteNoise)
-// You will find lots of interesting noise generators. For example these:
+    { Crackle.ar(XLine.kr(0.99, 2, 10), 0.4) }.freqscope.scope;
 
-{ Crackle.ar(XLine.kr(0.99, 2, 10), 0.4) }.freqscope.scope;
-
-{ LFDNoise0.ar(XLine.kr(1000, 20000, 10), 0.1) }.freqscope.scope;
-
-{ LFClipNoise.ar(XLine.kr(1000, 20000, 10), 0.1) }.freqscope.scope;
-
-// Impulse
-{ Impulse.ar(80, 0.7) }.play
-{ Impulse.ar(4, 0.7) }.play
-
-// Dust (random impulses)
-{ Dust.ar(80) }.play
-{ Dust.ar(4) }.play
-~~~~~~~
+    { LFDNoise0.ar(XLine.kr(1000, 20000, 10), 0.1) }.freqscope.scope;
+    
+    { LFClipNoise.ar(XLine.kr(1000, 20000, 10), 0.1) }.freqscope.scope;
+    
+    // Impulse
+    { Impulse.ar(80, 0.7) }.play
+    { Impulse.ar(4, 0.7) }.play
+    
+    // Dust (random impulses)
+    { Dust.ar(80) }.play
+    { Dust.ar(4) }.play
 
 We can not start to sculpt sound with the use of filters and envelopes. For example, what would this remind us of:
 
-{line-numbers=off}
-~~~~~~~
-{WhiteNoise.ar(1) * EnvGen.ar(Env.perc(0.001,0.3), doneAction:2)}.play
-~~~~~~~
+    {WhiteNoise.ar(1) * EnvGen.ar(Env.perc(0.001,0.3), doneAction:2)}.play
 
 We can add a low pass filter (LPF) to the noise, so we cut off the high frequencies:
 
-{line-numbers=off}
-~~~~~~~
-{LPF.ar(WhiteNoise.ar(1), 3300) * EnvGen.ar(Env.perc(0.001,0.5), doneAction:2)}.play
-~~~~~~~
+    {LPF.ar(WhiteNoise.ar(1), 3300) * EnvGen.ar(Env.perc(0.001,0.5), doneAction:2)}.play
 
 And here we use mouse movements to control the cutoff frequency (the x-axis) and the envelope duration (y-axis):
 
-{line-numbers=off}
-~~~~~~~
-(
-fork{
-	100.do({
-		{LPF.ar(WhiteNoise.ar(1), MouseX.kr(200,20000, 1)) 
-			* EnvGen.ar(Env.perc(0.00001, MouseY.kr(1, 0.1, 1)), doneAction:2)}.play;
-		1.wait;
-	});
-}
-)
-~~~~~~~
+    (
+    fork{
+    	100.do({
+    		{LPF.ar(WhiteNoise.ar(1), MouseX.kr(200,20000, 1)) 
+    			* EnvGen.ar(Env.perc(0.00001, MouseY.kr(1, 0.1, 1)), doneAction:2)}.play;
+    		1.wait;
+    	});
+    }
+    )
 
 But what did that low pass filter do? LPF? HPF? These are filters that *pass through the low frequencies*, thus the name. A high pass filter will *pass through the high frequencies*. And a band pass filter will pass through the frequencies of a band that you specify. We can view the functionality of the low pass filter with the use of a frequency scope. Note also the quality parameter in the resonant low pass filter:
 
-{line-numbers=off}
-~~~~~~~
-{LPF.ar(WhiteNoise.ar(0.4), MouseX.kr(100, 20000).poll(20, "cutoff"))}.freqscope;
-{RLPF.ar(WhiteNoise.ar(0.4), MouseX.kr(100, 20000).poll(20, "cutoff"), MouseY.kr(0.01, 1).poll(20, "quality"))}.freqscope
-~~~~~~~
+    {LPF.ar(WhiteNoise.ar(0.4), MouseX.kr(100, 20000).poll(20, "cutoff"))}.freqscope;
+    {RLPF.ar(WhiteNoise.ar(0.4), MouseX.kr(100, 20000).poll(20, "cutoff"), MouseY.kr(0.01, 1).poll(20, "quality"))}.freqscope
 
 
 ## Filter Types
@@ -87,42 +72,36 @@ Filters are algorithms that are typically applied in the time domain of an audio
 
 Here is a very primitive such filter:
 
-{line-numbers=off}
-~~~~~~~
-{
-var signal;
-var delaytime = MouseX.kr(0.000022675, 0.001); // from a sample 
-signal = Saw.ar(220, 0.5);
-d =  DelayC.ar(signal, 0.6, delaytime); 
-(signal + d).dup
-}.play
-~~~~~~~
+    {
+    var signal;
+    var delaytime = MouseX.kr(0.000022675, 0.001); // from a sample 
+    signal = Saw.ar(220, 0.5);
+    d =  DelayC.ar(signal, 0.6, delaytime); 
+    (signal + d).dup
+    }.play
 
 Let us try some of the filter UGens of SuperCollider:
 
-{line-numbers=off}
-~~~~~~~
-// low pass filter
-{LPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1)!2) }.play;
-
-// low pass filter with XLine
-{LPF.ar(WhiteNoise.ar(0.4), XLine.kr(40,20000, 3, doneAction:2)!2) }.play;
-
-// high pass filter
-{HPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1)!2) }.play;
-
-// band pass filter (the Q is controlled by the MouseY)
-{BPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1), MouseY.kr(0.01,1)!2) }.play;
-
-// Mid EQ filter attenuates or boosts a frequency band
-{MidEQ.ar(WhiteNoise.ar(0.024), MouseX.kr(40,20000,1), MouseY.kr(0.01,1), 24)!2 }.play;
-
-// what's happening here?
-{
-var signal = MidEQ.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1), MouseY.kr(0.01,1), 24);
-BPF.ar(signal, MouseX.kr(40,20000,1), MouseY.kr(0.01,1)) !2
-}.play;
-~~~~~~~
+    // low pass filter
+    {LPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1)!2) }.play;
+    
+    // low pass filter with XLine
+    {LPF.ar(WhiteNoise.ar(0.4), XLine.kr(40,20000, 3, doneAction:2)!2) }.play;
+    
+    // high pass filter
+    {HPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1)!2) }.play;
+    
+    // band pass filter (the Q is controlled by the MouseY)
+    {BPF.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1), MouseY.kr(0.01,1)!2) }.play;
+    
+    // Mid EQ filter attenuates or boosts a frequency band
+    {MidEQ.ar(WhiteNoise.ar(0.024), MouseX.kr(40,20000,1), MouseY.kr(0.01,1), 24)!2 }.play;
+    
+    // what's happening here?
+    {
+    var signal = MidEQ.ar(WhiteNoise.ar(0.4), MouseX.kr(40,20000,1), MouseY.kr(0.01,1), 24);
+    BPF.ar(signal, MouseX.kr(40,20000,1), MouseY.kr(0.01,1)) !2
+    }.play;
 
 
 ### Resonating filters
