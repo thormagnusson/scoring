@@ -367,7 +367,7 @@ Check the source of Bus (by hitting Cmd+I) and locate the .get method. You will 
 
 Here is a program that demonstrates the asynchronous nature of b.get. The {}.play from above has to be running. Note how the numbered lines of code appear in the post window "in the wrong order"! (Instead of a synchronous posting of 1, 2 and 3, we get the order of 1, 3 and 2). It takes between 0.1 and 10 milliseconds to get the value on a 2.8 GHz Intel computer.
 
-```
+```ruby
 (
 x = 0; y= 0;
 b = Bus.control(s,1); // we create a control bus
