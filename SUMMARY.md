@@ -24,5 +24,5 @@
 * [Musical Patterns in SC Lang](PartIV/chapter16.md)
 * [Part IV - Composition](part_iv_-_composition.md)
 * [ProxySpace and JIT lib](PartIV/chapter17.md)
-* chapter18
+* [chapter18](PartIV/chapter18.md)
 
