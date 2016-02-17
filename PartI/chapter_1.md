@@ -414,15 +414,14 @@ You can see that in the .dumpFullInterface method will tell you all the methods 
 
 Now, this might give you a bit of a brainache, but don’t worry, you will gradually learn this terminology and what it means for you in your musical or sound practice with SuperCollider. Wikipedia is good place to start reading about [Object Oriented Programming] (https://en.wikipedia.org/wiki/Object-oriented_programming).
 
-
 ## Conditionals, data flow and control
 
 The final thing we should discuss before we start to make sounds with SuperCollider is how we control data and take decisions. This is about logic, about human thinking, and how to encode such decisions in the form of code. Such logic the basic form of all clever systems, for example in artificial intelligence. In short it is about establishing conditions and then decide what to do with them. For example: if it is raining and I’m going out, I take my umbrella with me, else I leave it at home. It’s about basic logic that humans do all the time throughout the day. And programming languages have ways formalise such conditions, most typically with an if-else statement.
 
 In pseudocode it looks like this:
-if( condition, { then do this }, { else do this });
+    if( condition, { then do this }, { else do this });
 as in:
-if( rain, { umbrella }, { no umbrella });
+    if( rain, { umbrella }, { no umbrella });
 
 So the condition represents a state that is either true or false. If it is true (there is rain), then it evaluates the first function, if false (no rain) it evaluates the second condition.
 
@@ -431,62 +430,57 @@ if( hungry, { eat } );
 
 So let’s play with this:
 
-{line-numbers=off}
-~~~~~~~
-if( true, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-if( false, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-~~~~~~~
+
+    if( true, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( false, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
 
 You can see that true and false are keywords in SuperCollider. They are so called Boolean values. You should not use those as variables (well, you can’t). In digital systems, we operate in binary code, in 1s and 0s. True is associated with 1 and false with 0. 
 
-{line-numbers=off}
-~~~~~~~
-true.binaryValue;
-false.binaryValue;
-~~~~~~~
+    true.binaryValue;
+    false.binaryValue;
 
 Boolean logic is named after George Boole who wrote an important paper in 1848 (“The Calculus of Logic”) on expressions and reasoning. In short it involves the statements AND, OR, and not.
 
 A simple boolean truth table might look like this
-true AND true = true
-true AND false = false
-false AND false = false
-true OR true = true
-true OR false = true
-false or false = false
+    
+    true AND true = true
+    true AND false = false
+    false AND false = false
+    true OR true = true
+    true OR false = true
+    false or false = false
 
 And also
-true AND not false = true
+
+    true AND not false = true
+
 etc. Let’s try this in SuperCollder code and observe the post window. But first we need to learn the basic syntax for the Boolean operators:
 
 == 	stands for *equal*
-!= 		stands for *not equal*
+!= 	stands for *not equal*
 &&	stands for *and*
-||		stands for *or*
+||	stands for *or*
 
 And we also use comparison operators
 
->		stands for *more than*
-<		stands for *less than*
->= 	stands for *more than or equal to*
-<= 	stands for *less than or equal to*
+">"  stands for *more than*  
+"<"  stands for *less than*  
+">="  stands for *more than or equal to*  
+"<="  stands for *less than or equal to*  
 
 
-{line-numbers=off}
-~~~~~~~
-true == true // returns true
-true != true // returns false (as true does indeed equal true)
-true == false // returns false
-true != false // returns true (as true does not equal false)
-3 == 3 // yes, 3 equals 3
-3 != 4 // true, 3 does not equal 4
-true || false // returns true, as one of the elements are true
-false || false // returns false, as both of the elements are false
-3 > 4 // false, as 3 is less than 4
-3 < 4 // true
-3 < 3 // false
-3 <= 3 // true, as 3 is indeed less than or equal to 3
-~~~~~~~
+    true == true // returns true
+    true != true // returns false (as true does indeed equal true)
+    true == false // returns false
+    true != false // returns true (as true does not equal false)
+    3 == 3 // yes, 3 equals 3
+    3 != 4 // true, 3 does not equal 4
+    true || false // returns true, as one of the elements are true
+    false || false // returns false, as both of the elements are false
+    3 > 4 // false, as 3 is less than 4
+    3 < 4 // true
+    3 < 3 // false
+    3 <= 3 // true, as 3 is indeed less than or equal to 3
 
 You might not realise it yet, but knowing what you now know is very powerful and it is something you will use all the time for synthesis, algorithmic composition, instrument building, sound installations, and so on. So make sure that you understand this properly. Let's play with this a bit more in if-statements:
 
