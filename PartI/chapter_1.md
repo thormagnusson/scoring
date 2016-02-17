@@ -484,17 +484,14 @@ And we also use comparison operators
 
 You might not realise it yet, but knowing what you now know is very powerful and it is something you will use all the time for synthesis, algorithmic composition, instrument building, sound installations, and so on. So make sure that you understand this properly. Let's play with this a bit more in if-statements:
 
-{line-numbers=off}
-~~~~~~~
-if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-// and things can be a bit more complex:
-if( (3 < 4) && (true != false), {"TRUE".postln;}, {"FALSE".postln;});
-~~~~~~~
+    if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    // and things can be a bit more complex:
+    if( (3 < 4) && (true != false), {"TRUE".postln;}, {"FALSE".postln;});
 
 What happened in that last statement? It asks: is 3 less than 4? Yes. AND is true not equal to false? Yes. Then both conditions are true, and that's what it posts. Note that of course the values in the string (inside the quotation marks) could be anything, we're just posting now. So you could write:
 
-if( (3 < 4) && (true != false), {"VERDAD".postln;}, {"FALSO".postln;}); 
+    if( (3 < 4) && (true != false), {"VERDAD".postln;}, {"FALSO".postln;}); 
 
 in Spanish if you'd like, but you could not write this:
 
@@ -504,31 +501,25 @@ as the SuperCollider language is in English.
 
 But what if you have lots of conditions to compare? Here you could use a *switch* statement:
 
-{line-numbers=off}
-~~~~~~~
-(
-a = 4.rand; // a will be a number from 0 to 4;
-switch(a)
-{0} {"a is zero".postln;} // runs this if a is zero
-{1} {"a is one".postln;} // runs this if a is one
-{2} {"a is two".postln;} // etc.
-{3} {"a is three".postln;};
-)
-~~~~~~~
+    (
+    a = 4.rand; // a will be a number from 0 to 4;
+    switch(a)
+    {0} {"a is zero".postln;} // runs this if a is zero
+    {1} {"a is one".postln;} // runs this if a is one
+    {2} {"a is two".postln;} // etc.
+    {3} {"a is three".postln;};
+    )
 
 Another way is to use the case statement, and it might be faster than the switch.
 
-{line-numbers=off}
-~~~~~~~
-(
-a = 4.rand; // a will be a number from 0 to 4;
-case
-{a == 0} {"a is zero".postln;} // runs this if a is zero
-{a == 1} {"a is one".postln;} // runs this if a is one
-{a == 2} {"a is two".postln;} // etc.
-{a == 3} {"a is three".postln;};
-)
-~~~~~~~
+    (
+    a = 4.rand; // a will be a number from 0 to 4;
+    case
+    {a == 0} {"a is zero".postln;} // runs this if a is zero
+    {a == 1} {"a is one".postln;} // runs this if a is one
+    {a == 2} {"a is two".postln;} // etc.
+    {a == 3} {"a is three".postln;};
+    )
 
 Note that both in switch and case, the semicolon is only after the last testing condition. (so the line evaluation goes from "case...... to that semicolon" )
 
@@ -538,101 +529,77 @@ The final thing we need to learn in this chapter is looping. Looping is one of t
 
 In many programming languages this is done with a [for-loop] (http://en.wikipedia.org/wiki/For_loop):
 
-for(int i = 0; i > 10, i++) {
-	println("i is now" + i);		
-}
+    for(int i = 0; i > 10, i++) {
+    	println("i is now" + i);		
+    }
 
 The above code will work in Java, C, JavaScript and many other languages. But SuperCollider is a fully object orientated language, where everything is an object - which can have methods - so an integer can have a method like .neg, or .midicps, but also .do (the loop).
 
 So in SuperCollider we can simply do:
 
-{line-numbers=off}
-~~~~~~~
-10.do({ "SCRAMBLE THIS 10 TIMES".scramble.postln; })
-~~~~~~~
+
+    10.do({ "SCRAMBLE THIS 10 TIMES".scramble.postln; })
 
 What happened is that it loops through the command 10 times and evaluates the function (which scrambles and posts the string we wrote) every time. We could then make a counter:
 
-{line-numbers=off}
-~~~~~~~
-(
-var counter = 0;
-10.do({ 
-	counter = counter + 1;
-	"counter is now: ".post; 
-	counter.postln; 
-})
-)
-~~~~~~~
+    (
+    var counter = 0;
+    10.do({ 
+    	counter = counter + 1;
+    	"counter is now: ".post; 
+    	counter.postln; 
+    })
+    )
 
 But instead of such counter we can use the argument passed into the function in a loop:
 
-{line-numbers=off}
-~~~~~~~
-10.do({arg counter; counter.postln;});
-// you can call this argument whatever you want:
-10.do({arg num; num.postln;});
-// and the typical convention is to use the character "i" (for iteration):
-10.do({arg i; i.postln;});
-~~~~~~~
+    10.do({arg counter; counter.postln;});
+    // you can call this argument whatever you want:
+    10.do({arg num; num.postln;});
+    // and the typical convention is to use the character "i" (for iteration):
+    10.do({arg i; i.postln;});
 
 Let's now try to make a small program that gives us all the prime numbers from 0 to 10000. There is a method of the Integer class that is called isPrime which comes in handy here. We will use many of the things learned in this chapter, i.e., creating a List, making a do loop with a function that has a iterator argument, and then we'll ask if the iterator is a prime number, using an if-statement. If it is (i.e. true), we add it to the list. Finally we post the result to the post window. But note that we're only posting after we've done the 10000 iterations.
 
-{line-numbers=off}
-~~~~~~~
-(
-p = List.new;
-10000.do({ arg i; // i is the iteration from 0 to 10000
-	if( i.isPrime, { p.add(i) }); // no else condition - we don't need it
-});
-Post << p;
-)
-~~~~~~~
+    (
+    p = List.new;
+    10000.do({ arg i; // i is the iteration from 0 to 10000
+    	if( i.isPrime, { p.add(i) }); // no else condition - we don't need it
+    });
+    Post << p;
+    )
 
 We can also loop through an Array or a List. Then the do-loop will pick up up all the items of the array and pass it into the function that you write inside the do loop. Additionally, it will add an iterator. So we have two arguments to the function:
 
-{line-numbers=off}
-~~~~~~~
-(
-[ 11, 22, 33, 44, 55, 66, 77, 88, 99 ].do({arg item, counter; 
-	item.post; " is in the array at slot: ".post; counter.postln;
-});
-)
-~~~~~~~
+    (
+    [ 11, 22, 33, 44, 55, 66, 77, 88, 99 ].do({arg item, counter; 
+    	item.post; " is in the array at slot: ".post; counter.postln;
+    });
+    )
 
 So it posts the slot (the counter/iterator always starts at zero), and the item in the list. You can call the arguments whatever you want of course. Example:
 
-{line-numbers=off}
-~~~~~~~
-[ 11, 22, 33, 44, 55, 66, 77, 88, 99 ].do({arg aa, bb; aa.post; " is in the array at slot: ".post; bb.postln });
-~~~~~~~
+    [ 11, 22, 33, 44, 55, 66, 77, 88, 99 ].do({arg aa, bb; aa.post; " is in the array at slot: ".post; bb.postln });
 
-Another looping technology is to use the for-loop:
+Another looping technique is to use the for-loop:
 
-{line-numbers=off}
-~~~~~~~
-for(startValue, endValue, function); // this is the syntax
-for(100, 130, { arg i; i = i+10; i.postln; }) // example
-~~~~~~~
+
+    for(startValue, endValue, function); // this is the syntax
+    for(100, 130, { arg i; i = i+10; i.postln; }) // example
 
 We might also want to use the forBy-loop:
 
-{line-numbers=off}
-~~~~~~~
-forBy(startValue, endValue, stepValue, function); // the syntax
-forBy(100, 130, 4, { arg i; i = i+10; i.postln; }) // example
-~~~~~~~
+    forBy(startValue, endValue, stepValue, function); // the syntax
+    forBy(100, 130, 4, { arg i; i = i+10; i.postln; }) // example
+
 
 While is another type of loop:
 
-{line-numbers=off}
-~~~~~~~
-while (testFunc, bodyFunc); // syntax
-(
-i = 0;
-while ({ i < 30 }, {  i = i + 1; i.postln; });
-)
-~~~~~~~
+    while (testFunc, bodyFunc); // syntax
+    (
+    i = 0;
+    while ({ i < 30 }, {  i = i + 1; i.postln; });
+    )
 
 This is enough about the language. Now is the time to dive into making sounds and explore the synthesis capabilities of SuperCollider. But first let us learn some tricks of peeking under the hood of the SuperCollider language:
 
@@ -645,14 +612,12 @@ XXX FIX THIS:
 - For checking the implementations of a method (which classes support it), type Apple + Y - poll
 - For checking references to a method (which classes support it), type Shift + Apple + Y - poll
 
-{line-numbers=off}
-~~~~~~~
-UGen.dumpSubclassList // UGen is a class. Try dumping LFSaw for example
+    UGen.dumpSubclassList // UGen is a class. Try dumping LFSaw for example
 
-UGen.browse  // examine methods interactively in a GUI (OSX)
+    UGen.browse  // examine methods interactively in a GUI (OSX)
+    
+    SinOsc.dumpFullInterface  // list all methods for the classhierarchically
+    SinOsc.dumpMethodList  // list instance methods alphabetically
+    SinOsc.openHelpFile
 
-SinOsc.dumpFullInterface  // list all methods for the classhierarchically
-SinOsc.dumpMethodList  // list instance methods alphabetically
-SinOsc.openHelpFile
-~~~~~~~
 
