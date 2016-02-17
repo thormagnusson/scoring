@@ -17,5 +17,5 @@
    * [Granular Synthesis](PartII/chapter10.md)
    * [Physical Modelling](PartII/chapter11.md)
 * [chapter12](PartIII/chapter12.md)
-* chapter13
+* [chapter13](PartIII/chapter13.md)
 
