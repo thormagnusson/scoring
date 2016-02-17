@@ -177,37 +177,30 @@ We have now created various wave forms using sine waves, and here is how to wrap
     b.set(\amp, 0.4, \pan, 1);
     s.freqscope; // if the freqscope is not already running
     b.set(\freq, 1400); // not band limited as we can see 
-~~~~~~~
 
 We have created various typical wave forms above in order to show how they are sums of sinusoidal waves. A good idea is to play with this further and create your own waveforms:
 
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        ({arg i;
-                var j = i * 2.cubed + 1;
-                SinOsc.ar(MouseX.kr(20,800) * j, 0, 1/j)
-        } ! 20).sum;
-};
-)
-f.plot;
-f.play;
-~~~~~~~
-
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        ({arg i;
-                var j = i * 2.squared.distort + 1;
-                SinOsc.ar(MouseX.kr(20,800) * j, 0, 0.31/j)
-        } ! 20).sum;
-};
-)
-f.plot;
-f.play;
-~~~~~~~
+    (
+    f = {
+            ({arg i;
+                    var j = i * 2.cubed + 1;
+                    SinOsc.ar(MouseX.kr(20,800) * j, 0, 1/j)
+            } ! 20).sum;
+    };
+    )
+    f.plot;
+    f.play;
+    
+    (
+    f = {
+            ({arg i;
+                    var j = i * 2.squared.distort + 1;
+                    SinOsc.ar(MouseX.kr(20,800) * j, 0, 0.31/j)
+            } ! 20).sum;
+    };
+    )
+    f.plot;
+    f.play;
 
 
 ## Bell Synthesis
@@ -225,72 +218,62 @@ Try to run this a few times. What we hear is a wave form that might be quite sim
     	* EnvGen.ar(Env.perc(0.0001, rrand(2, 6))) 
     });
     }.play
-~~~~~~~
 
 Above we are using Mix.fill instead of creating an array with ! and then .summing it. These two examples do the same thing, but it is good for the student of SuperCollider to learn different ways of reading and writing code.
 
 You note that there is a "new" bell every time we run the above code. But what if we wanted the "same" bell? One way to do that is to "hard-code" the frequencies, durations, and the amplitudes of the bell.
 
-{line-numbers=off}
-~~~~~~~
-{
-var freq = [333, 412, 477, 567, 676, 890, 900, 994];
-var dur = [4, 3.5, 3.6, 3.1, 2, 1.4, 2.4, 4.1];
-var amp = [0.4, 0.2, 0.1, 0.4, 0.33, 0.22, 0.13, 0.4];
-Mix.fill( 8, { arg i;
-	SinOsc.ar(freq[i], 0, 0.1) 
-	* EnvGen.ar(Env.perc(0.0001, dur[i])) 
-});
-}.play
-~~~~~~~
+    {
+    var freq = [333, 412, 477, 567, 676, 890, 900, 994];
+    var dur = [4, 3.5, 3.6, 3.1, 2, 1.4, 2.4, 4.1];
+    var amp = [0.4, 0.2, 0.1, 0.4, 0.33, 0.22, 0.13, 0.4];
+    Mix.fill( 8, { arg i;
+    	SinOsc.ar(freq[i], 0, 0.1) 
+    	* EnvGen.ar(Env.perc(0.0001, dur[i])) 
+    });
+    }.play
 
 Generating a SynthDef using a non-deterministic algorithms (such as random) in the SC-lang will also generate a SynthDef that is the "same" bell. Why? This is because the values (430.rand) are defined when the synth definition is compiled. Try to recompile the SynthDef and you get a new sound:
 
-{line-numbers=off}
-~~~~~~~
-(
-SynthDef(\mybell, {arg freq=333, amp=0.4, dur=2, pan=0.0;
-	var signal;
-	signal = Mix.fill(10, {
-		SinOsc.ar(freq+(430.rand), 1.0.rand, 10.reciprocal) 
-		* EnvGen.ar(Env.perc(0.0001, dur), doneAction:2) }) ;
-	signal = Pan2.ar(signal * amp, pan);
-	Out.ar(0, signal);
-}).add
-)
-// let's try our bell
-Synth(\mybell) // same sound all the time
-Synth(\mybell, [\freq, 444+(400.rand)]) // new frequency, but same sound
-// try to redefine the SynthDef above and you will now get a different bell:
-Synth(\mybell) // same sound all the time
-~~~~~~~
+    (
+    SynthDef(\mybell, {arg freq=333, amp=0.4, dur=2, pan=0.0;
+    	var signal;
+    	signal = Mix.fill(10, {
+    		SinOsc.ar(freq+(430.rand), 1.0.rand, 10.reciprocal) 
+    		* EnvGen.ar(Env.perc(0.0001, dur), doneAction:2) }) ;
+    	signal = Pan2.ar(signal * amp, pan);
+    	Out.ar(0, signal);
+    }).add
+    )
+    // let's try our bell
+    Synth(\mybell) // same sound all the time
+    Synth(\mybell, [\freq, 444+(400.rand)]) // new frequency, but same sound
+    // try to redefine the SynthDef above and you will now get a different bell:
+    Synth(\mybell) // same sound all the time
 
 Another way of generating this bell sound would be to use the SynthDef from last tutorial, but here adding a duration to the envelope:
 
-{line-numbers=off}
-~~~~~~~
-(
-SynthDef(\sine, {arg freq=333, amp=0.4, dur, pan=0.0;
-	var signal, env;
-	env = EnvGen.ar(Env.perc(0.01, dur), doneAction:2);
-	signal = SinOsc.ar(freq, 0, amp) * env;
-	signal = Pan2.ar(signal, pan);
-	Out.ar(0, signal);
-}).add
-);
+    (
+    SynthDef(\sine, {arg freq=333, amp=0.4, dur, pan=0.0;
+    	var signal, env;
+    	env = EnvGen.ar(Env.perc(0.01, dur), doneAction:2);
+    	signal = SinOsc.ar(freq, 0, amp) * env;
+    	signal = Pan2.ar(signal, pan);
+    	Out.ar(0, signal);
+    }).add
+    );
 
-(
-var numberOfSynths;
-numberOfSynths = 15;
-Array.fill(numberOfSynths, {
-	Synth(\stereosineWenv, [	
-		\freq, 300+(430.rand),
-		\phase, 1.0.rand,
-		\amp, numberOfSynths.reciprocal, // reciprocal here means 1/numberOfSynths
-		\dur, 2+(1.0.rand)]);
-});
-)
-~~~~~~~
+    (
+    var numberOfSynths;
+    numberOfSynths = 15;
+    Array.fill(numberOfSynths, {
+    	Synth(\stereosineWenv, [	
+    		\freq, 300+(430.rand),
+    		\phase, 1.0.rand,
+    		\amp, numberOfSynths.reciprocal, // reciprocal here means 1/numberOfSynths
+    		\dur, 2+(1.0.rand)]);
+    });
+    )
 
 The power of using this style would be if you really wanted to be able to define all the parameters of the sound from the language, for example sonifying some complex information from gestural or other data.
 
@@ -330,14 +313,12 @@ In additive synthesis, people often analyse the sound they're trying to synthesi
 
 The information the spectrogram gives us is three dimensional. It shows us the frequencies present in the sound on the vertical x-axis, the time on the horizontal y-axis, and amplitude is color (which we could imagine as the z-axis). We see that the partials don't have the same type of envelopes: some have strong attack, others come smoothly in; some have much amplitude, others less; some have a long duration whilst other have less; and of them vibrate in frequency. These parameters can mix. A loud partial could die out quickly while a soft one can live for a long time.
 
-{line-numbers=off}
-~~~~~~~
-{ ({ SinOsc.ar(rrand(180, 1200), 0.5*pi, 0.1) // the partial
-		*
-	// each partial gets its own envelope of 0.5 to 5 seconds
-	EnvGen.ar(Env.perc(rrand(0.00001, 0.01), rrand(0.5, 5)))
-} ! 12).sum }.play
-~~~~~~~
+
+    { ({ SinOsc.ar(rrand(180, 1200), 0.5*pi, 0.1) // the partial
+    		*
+    	// each partial gets its own envelope of 0.5 to 5 seconds
+    	EnvGen.ar(Env.perc(rrand(0.00001, 0.01), rrand(0.5, 5)))
+    } ! 12).sum }.play
 
 Analysing the bell above we can detect the following partials
 * partial 1: xxx Hz, x sec. long, with amplitude of ca. x
@@ -350,44 +331,35 @@ Analysing the bell above we can detect the following partials
 
 We can now try to synthesize those harmonics:
 
-{line-numbers=off}
-~~~~~~~
-{ SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)
-}.play
-~~~~~~~
+    { SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)
+    }.play
 
 And we get a decent inharmonic sound (inharmonic is where the partials are not whole number multiples of a fundamental frequency). We would now need to set the right amplitude as well and we're still guessing from the spectrogram we made, but more importantly we should be using our ears.
 
-{line-numbers=off}
-~~~~~~~
-{ SinOsc.ar(xxx, 0, xxx)+
-SinOsc.ar(xxx, 0, xxx)+
-SinOsc.ar(xxx, 0, xxx)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)+
-SinOsc.ar(xxx, 0, 0.1)
-}.play
-~~~~~~~
+
+    { SinOsc.ar(xxx, 0, xxx)+
+    SinOsc.ar(xxx, 0, xxx)+
+    SinOsc.ar(xxx, 0, xxx)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)+
+    SinOsc.ar(xxx, 0, 0.1)
+    }.play
 
 Some of the partials have a bit of vibration and we could simply turn the oscillator into a 'detuned' oscillator by adding two sines together:
 
-{line-numbers=off}
-~~~~~~~
-// a regular 880 Hz wave at full amplitude
-{SinOsc.ar(880)!2}.play
-// a vibrating 880Hz wave (vibration at 3 Hz), where each is amp 0.5
-{SinOsc.ar([880, 883], 0, 0.5).sum!2}.play
-// the above is the same as (note the .sum):
-{(SinOsc.ar(880, 0, 0.5)+SinOsc.ar(883, 0, 0.5))!2}.play
-~~~~~~~
+    // a regular 880 Hz wave at full amplitude
+    {SinOsc.ar(880)!2}.play
+    // a vibrating 880Hz wave (vibration at 3 Hz), where each is amp 0.5
+    {SinOsc.ar([880, 883], 0, 0.5).sum!2}.play
+    // the above is the same as (note the .sum):
+    {(SinOsc.ar(880, 0, 0.5)+SinOsc.ar(883, 0, 0.5))!2}.play
 
-{line-numbers=off}
-~~~~~~~
+
 { SinOsc.ar([xxx, xxx], 0, xxx).sum+
 SinOsc.ar([xxx, xxx], 0, xxx).sum+
 SinOsc.ar([xxx, xxx], 0, xxx).sum+
@@ -395,12 +367,9 @@ SinOsc.ar([xxx, xxx], 0, xxx).sum+
 SinOsc.ar([xxx, xxx], 0, xxx).sum+
 SinOsc.ar([xxx, xxx], 0, xxx).sum
 }.play
-~~~~~~~
 
 And finally, we need to create envelopes for each of the partials:
 
-{line-numbers=off}
-~~~~~~~
 { (SinOsc.ar([xxx, xxx], 0, xxx).sum *
 EnvGen.ar(Env.perc(0.00001, xxx))) +
  (SinOsc.ar([xxx, xxx], 0, xxx).sum *
@@ -412,52 +381,39 @@ EnvGen.ar(Env.perc(0.00001, xxx))) +
  (SinOsc.ar([xxx, xxx], 0, xxx).sum *
 EnvGen.ar(Env.perc(0.00001, xxx))) +
 }.play
-~~~~~~~
 
 And let's listen to that. You will note that parenthesis have been put around each sine wave and its envelope multiplication. This is because SuperCollider calculates from left to right, and not giving + and - operators precedence, like in common maths and many other programming languages.
 
 TIP: Operator Precedence - explore how these equations result in different outcomes
 
-{line-numbers=off}
-~~~~~~~
-2+2*8 // you would expect 18 as the result, but SC returns what?
-100/2-10 // here you would expect to get 40, and you get the same in SC. Why?
-// now, for this reason it's a good practice to use parenthesis, e.g.,
-2+(2*8)
-100/(2-10) // if that's what you were trying to do
-~~~~~~~
+    2+2*8 // you would expect 18 as the result, but SC returns what?
+    100/2-10 // here you would expect to get 40, and you get the same in SC. Why?
+    // now, for this reason it's a good practice to use parenthesis, e.g.,
+    2+(2*8)
+    100/(2-10) // if that's what you were trying to do
 
 We have now created a reasonable representation of the bell sound that we listened to. The next thing to do is to turn that into a synth definition and make it stereo. Note that we add a general envelope with a doneAction:2, which will remove the synth from the server when it has stopped playing.
 
-{line-numbers=off}
-~~~~~~~
-SynthDef(\bell, xxxx
-
-// and we can play our new bell
-Synth(\bell)
-~~~~~~~
+    SynthDef(\bell, xxxx
+    
+    // and we can play our new bell
+    Synth(\bell)
 
 This bell has a specific frequency, but it would be nice to be able to pass a new frequency as a parameter. This could be done in many ways, one would be to pass the frequencies of each of the oscillators as arguments to the Synth. This would make the instrument quite flexible, but on the other hand it would weaken its unique character (now that so many more types of bell sounds - with their respective harmonic relationships - can be made with it). So here we decide to keep the same ratios between the partials for this unique bell sound, but a sound that can change in pitch. We find the ratios by dividing the frequencies by the lowest frequency.
 
-{line-numbers=off}
-~~~~~~~
-[xxx, xxx2, xxx3, xxx4]/xxx
-// which gives us this array:
-[xxxxxxxxxxxxxxxxxxxxxxxxx]
-~~~~~~~
+    [xxx, xxx2, xxx3, xxx4]/xxx
+    // which gives us this array:
+    [xxxxxxxxxxxxxxxxxxxxxxxxx]
 
 We can now use those ratios in our synth definition
 
-{line-numbers=off}
-~~~~~~~
-SynthDef(\bell, xxxx
-
-// and we can play the bell with different frequencies
-Synth(\bell, [\freq, 440])
-Synth(\bell, [\freq, 220])
-Synth(\bell, [\freq, 590])
-Synth(\bell, [\freq, 1000.rand])
-~~~~~~~
+    SynthDef(\bell, xxxx
+    
+    // and we can play the bell with different frequencies
+    Synth(\bell, [\freq, 440])
+    Synth(\bell, [\freq, 220])
+    Synth(\bell, [\freq, 590])
+    Synth(\bell, [\freq, 1000.rand])
 
 
 ## Harmonics GUI
