@@ -2,11 +2,9 @@
 
 In the early 19th century, the mathematician Joseph Fourier came up with a theory that stated that any sound can be described as a function of pure sine waves. This is a very important statement for computer music. It means that we can recreate any sound that we hear by adding number of sine waves together with different frequency, phase and amplitude. Obviously this was a costly technique in times of modular synthesis, as one would have to apply multiple oscillators to get the desired sound. This has changed with digital sound, where innumerable oscillators can be added together with little cost. Here is a proof:
 
-{line-numbers=off}
-~~~~~~~
-// we add 500 oscillators together and the CPU is less than 20% 
-{({SinOsc.ar(4444.4.rand, 0, 0.005)}!500).sum}.play
-~~~~~~~
+
+    // we add 500 oscillators together and the CPU is less than 20% 
+    {({SinOsc.ar(4444.4.rand, 0, 0.005)}!500).sum}.play
 
 ## Adding waves
 
@@ -14,80 +12,52 @@ Adding waves together seems simple, and indeed it is. By using the plus operator
 
 ![Adding two waves of 440Hz together](images/ch5_two440Hz.png)
 
-{line-numbers=off}
-~~~~~~~
-{[SinOsc.ar(440), SinOsc.ar(440), SinOsc.ar(440)+SinOsc.ar(440)]}.plot
-// try this as well
-{a = SinOsc.ar(440, 0, 0.5); [a, a, a+a]}.plot
-~~~~~~~
+    {[SinOsc.ar(440), SinOsc.ar(440), SinOsc.ar(440)+SinOsc.ar(440)]}.plot
+    // try this as well
+    {a = SinOsc.ar(440, 0, 0.5); [a, a, a+a]}.plot
 
 ![Adding a 440Hz and a 220Hz wave together](images/ch5_200n400Hz.png)
 
-{line-numbers=off}
-~~~~~~~
-{[SinOsc.ar(440), SinOsc.ar(220), SinOsc.ar(440)+SinOsc.ar(220)]}.plot
-~~~~~~~
+    {[SinOsc.ar(440), SinOsc.ar(220), SinOsc.ar(440)+SinOsc.ar(220)]}.plot
 
 ![Adding two 440 waves together but one with inverted phase](images/ch5_200n400Hz.png)
 
-{line-numbers=off}
-~~~~~~~
-{[SinOsc.ar(440), SinOsc.ar(440, pi), SinOsc.ar(440)+SinOsc.ar(440, pi)]}.plot
-~~~~~~~
+    {[SinOsc.ar(440), SinOsc.ar(440, pi), SinOsc.ar(440)+SinOsc.ar(440, pi)]}.plot
 
 You see that two waves at the same frequency added together becomes twice the amplitude. When two waves with the amplitude of 1 are added together we get an amplitude of 2 and in the graph we get a clipping where the wave is clipped at 1. This can cause a distortion, but also resulting in a different wave form, namely a square wave. You can explore this by giving a sine wave the amplitude of 10, but then clip the signal at, say -0.75 and 0.75.
 
-{line-numbers=off}
-~~~~~~~
 {SinOsc.ar(440, 0, 10).clip(-0.75, 0.75)}.scope
-~~~~~~~
 
 Most instrumental sounds can be roughly described as a combination of sine waves. Those sinusoidal waves are called partials (the horizontal lines you see in a spectrogram when you analyse a sound). In the example below we mix ten sine waves of frequencies between 200 and 2000. You might well be able to detect a pitch in the example if you run it many times, but since these are random frequencies they are not necessarily lining up to give us a solid pitch. 
 
-{line-numbers=off}
-~~~~~~~
-{Mix.fill(10, {SinOsc.ar(rrand(200,2000), 0, 0.1)})}.freqscope
-{Mix.fill(10, {SinOsc.ar(rrand(200,2000), 0, 0.1)})}.spectrogram (XXX fix spectrogram quark)
-~~~~~~~
-
+    {Mix.fill(10, {SinOsc.ar(rrand(200,2000), 0, 0.1)})}.freqscope
+    {Mix.fill(10, {SinOsc.ar(rrand(200,2000), 0, 0.1)})}.spectrogram 
+    
 In harmonic sounds, like the piano, guitar, or the violin we get partials that are whole number multiples of the fundamental (the lowest) partial. If they are fundamental multiples, the partials are called **harmonics**. The harmonics can be of varied amplitude, phase, envelope form, and duration. A saw wave is a waveform with all the harmonics represented, but lowering in amplitude:
 
-{line-numbers=off}
-~~~~~~~
-{Saw.ar(880)}.freqscope
-~~~~~~~
+    {Saw.ar(880)}.freqscope
 
 It is recommended that you play with adding waves together in various ways. Explore what happens when you add harmonics together (integer multiples of a fundamental frequency), 
 
-{line-numbers=off}
-~~~~~~~
-// adding two waves - the second is the octave (second harmonic) of the first
-{(SinOsc.ar(440,0, 0.4) + SinOsc.ar(880, 0, 0.4))!2}.play
-~~~~~~~
+    // adding two waves - the second is the octave (second harmonic) of the first
+    {(SinOsc.ar(440,0, 0.4) + SinOsc.ar(880, 0, 0.4))!2}.play
 
-{line-numbers=off}
-~~~~~~~
-// here we add four harmonics (of equal amplitude) together
-(
-{	
-var freq = 200;
-SinOsc.ar(freq, 0, 0.2)   + 
-SinOsc.ar(freq*2, 0, 0.2) +
-SinOsc.ar(freq*3, 0, 0.2) + 
-SinOsc.ar(freq*4, 0, 0.2) 
-!2}.play
-)
-~~~~~~~
+    // here we add four harmonics (of equal amplitude) together
+    (
+    {	
+    var freq = 200;
+    SinOsc.ar(freq, 0, 0.2)   + 
+    SinOsc.ar(freq*2, 0, 0.2) +
+    SinOsc.ar(freq*3, 0, 0.2) + 
+    SinOsc.ar(freq*4, 0, 0.2) 
+    !2}.play
+    )
 
 The harmonic series is something we all know intuitively and have heard many times (swing a flexible tube around your head and you will get a sound in the harmonic series). The Blip UGen in SuperCollider allows you to dynamically control the number of harmonics of equal amplitude:
 
-{line-numbers=off}
-~~~~~~~
-{Blip.ar(440, MouseX.kr(1, 20))}.scope // using the Mouse
-{Blip.ar(440, MouseX.kr(1, 20))}.freqscope
-{Blip.ar(440, Line.kr(1, 22, 3) )}.play
-~~~~~~~
-
+    {Blip.ar(440, MouseX.kr(1, 20))}.scope // using the Mouse
+    {Blip.ar(440, MouseX.kr(1, 20))}.freqscope
+    {Blip.ar(440, Line.kr(1, 22, 3) )}.play
 
 ## Creating wave forms out of sinusoids
 
@@ -97,139 +67,116 @@ T>## Creating Arrays
 T>
 T> There are many ways of creating arrays, and in SuperCollider the syntax for creating arrays is quite flexible. They are all doing pretty much the same thing under the hood (check the source code of Object:dup and Object:!, by hitting Cmd+I or Ctrl+I). 
 
-
-{line-numbers=off}
-~~~~~~~
-// a) here is an array with 5 items:
-Array.fill(5, {arg i; i.postln;});
-// b) this is the same as (using a shortcut):
-{arg i; i.postln;}.dup(5)
-// c) or simply (using another shortcut):
-{arg i; i.postln;}!5
-
-// d) we can then sum the items in the array (add them together):
-Array.fill(5, {arg i; i.postln;}).sum;
-// e) we could do it this way as well:
-sum({arg i; i.postln;}.dup(5));
-// f) or this way:
-({arg i; i.postln;}.dup(5)).sum;
-// g) or this way:
-({arg i; i.postln;}!5).sum;
-// h) or simply this way:
-sum({arg i; i.postln;}!5);
-~~~~~~~
+    // a) here is an array with 5 items:
+    Array.fill(5, {arg i; i.postln;});
+    // b) this is the same as (using a shortcut):
+    {arg i; i.postln;}.dup(5)
+    // c) or simply (using another shortcut):
+    {arg i; i.postln;}!5
+    
+    // d) we can then sum the items in the array (add them together):
+    Array.fill(5, {arg i; i.postln;}).sum;
+    // e) we could do it this way as well:
+    sum({arg i; i.postln;}.dup(5));
+    // f) or this way:
+    ({arg i; i.postln;}.dup(5)).sum;
+    // g) or this way:
+    ({arg i; i.postln;}!5).sum;
+    // h) or simply this way:
+    sum({arg i; i.postln;}!5);
 
 Above we created a Saw wave which contains harmonics up to the [Nyquist rate] (http://en.wikipedia.org/wiki/Nyquist_rate), which is half of the sample rate SuperCollider is running. The Saw UGen is "band-limited" which means that it does not alias and mirror back into the audible range. (Compare with LFSaw which will alias - you can both hear and see the harmonics mirror back into the audio range).
 
-{line-numbers=off}
-~~~~~~~
-{Saw.ar(MouseX.kr(100, 1000))}.freqscope
-{LFSaw.ar(MouseX.kr(100, 1000))}.freqscope
-~~~~~~~
+    {Saw.ar(MouseX.kr(100, 1000))}.freqscope
+    {LFSaw.ar(MouseX.kr(100, 1000))}.freqscope
 
 We can now try to create a saw wave out of sine waves. There is a simple algorithm for this, where each partial is an integer multiple of the fundamental frequency, and decreasing in amplitude by the reciprocal of the partials's/harmonic's number (1/harmnum).
 
 A 'Saw' wave with 30 harmonics:
 
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        ({arg i;
-                var j = i + 1;
-                SinOsc.ar(300 * j, 0,  j.reciprocal * 0.5);
-        } ! 30).sum // we sum this function 30 times
-!2}; // and we make it a stereo signal
-)
+    (
+    f = {
+            ({arg i;
+                    var j = i + 1;
+                    SinOsc.ar(300 * j, 0,  j.reciprocal * 0.5);
+            } ! 30).sum // we sum this function 30 times
+    !2}; // and we make it a stereo signal
+    )
 
-f.plot; // let's plot the wave form
-f.play; // listen to it
-f.freqscope; // view and listen to it
-~~~~~~~
-
+    f.plot; // let's plot the wave form
+    f.play; // listen to it
+    f.freqscope; // view and listen to it
+    
 By inverting the phase (using pi), we get an inverted wave form.
 
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        Array.fill(30, {arg i;
-                var j = i + 1;
-                SinOsc.ar(300 * j, pi,  j.reciprocal * 0.5) // note pi
-        }).sum // we sum this function 30 times
-!2}; // and we make it a stereo signal
-)
 
-f.plot; // let's plot the wave form
-f.play; // listen to it
-f.freqscope; // view and listen to it
-~~~~~~~
+    (
+    f = {
+            Array.fill(30, {arg i;
+                    var j = i + 1;
+                    SinOsc.ar(300 * j, pi,  j.reciprocal * 0.5) // note pi
+            }).sum // we sum this function 30 times
+    !2}; // and we make it a stereo signal
+    )
+    
+    f.plot; // let's plot the wave form
+    f.play; // listen to it
+    f.freqscope; // view and listen to it
 
 A square wave is a type of a pulse wave (If the length of the on time of the pulse is equal to the length of the off time – also known as a duty cycle of 1:1 – then the pulse wave may also be called a square wave). The square wave can be created by sine waves if we ignore all the even harmonics and only add the odd ones.
 
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        ({arg i;
-                var j = i * 2 + 1; // the odd harmonics (1,3,5,7,etc)
-                SinOsc.ar(300 * j, 0, 1/j)
-        } ! 20).sum;
-};
-)
-
-f.plot;
-f.play;
-f.freqscope;
-~~~~~~~
+    (
+    f = {
+            ({arg i;
+                    var j = i * 2 + 1; // the odd harmonics (1,3,5,7,etc)
+                    SinOsc.ar(300 * j, 0, 1/j)
+            } ! 20).sum;
+    };
+    )
+    
+    f.plot;
+    f.play;
+    f.freqscope;
 
 Let's quickly look at the regular Pulse wave in SuperCollider:
  
-{line-numbers=off}
-~~~~~~~
-{ Pulse.ar(440, MouseX.kr(0, 1), 0.5) }.scope;
-// we could also recreate this with an algorithm on a sine wave:
-{ if( SinOsc.ar(122)>0 , 1, -1 )  }.scope; // a square wave
-{ if( SinOsc.ar(122)>MouseX.kr(0, 1) , 1, -1 )  }.scope; // MouseX controls the period
-{ if( SinOsc.ar(122)>MouseX.kr(0, 1) , 1, -1 ) * 0.1 }.scope; // amplitude down
-~~~~~~~
+    { Pulse.ar(440, MouseX.kr(0, 1), 0.5) }.scope;
+    // we could also recreate this with an algorithm on a sine wave:
+    { if( SinOsc.ar(122)>0 , 1, -1 )  }.scope; // a square wave
+    { if( SinOsc.ar(122)>MouseX.kr(0, 1) , 1, -1 )  }.scope; // MouseX controls the period
+    { if( SinOsc.ar(122)>MouseX.kr(0, 1) , 1, -1 ) * 0.1 }.scope; // amplitude down
 
 A triangle wave is a wave form, similar to the pulse wave in that it ignores the even harmonics, but it has a different algorithm for the phase and the amplitude:
 
-{line-numbers=off}
-~~~~~~~
-(
-f = {
-        ({arg i;
-                var j = i * 2 + 1;
-                SinOsc.ar(300 * j, pi/2, 0.7/j.squared) // cosine wave (phase shift)
-        } ! 20).sum;
-};
-)
-f.plot;
-f.play;
-f.freqscope;
-~~~~~~~
+    (
+    f = {
+            ({arg i;
+                    var j = i * 2 + 1;
+                    SinOsc.ar(300 * j, pi/2, 0.7/j.squared) // cosine wave (phase shift)
+            } ! 20).sum;
+    };
+    )
+    f.plot;
+    f.play;
+    f.freqscope;
 
 We have now created various wave forms using sine waves, and here is how to wrap them up in a SynthDef for future use:
 
-{line-numbers=off}
-~~~~~~~
-SynthDef(\triwave, {arg freq=400, pan=0, amp=1;
-	var wave;
-	wave = ({arg i;
-                	var j = i * 2 + 1;
-                	SinOsc.ar(freq * j, pi/2, 0.6 / j.squared);
-        	} ! 20).sum;
-	Out.ar(0, Pan2.ar(wave * amp, pan));
-}).add;
-
-a = Synth(\triwave, [\freq, 300]);
-a.set(\amp, 0.3, \pan, -1);
-b = Synth(\triwave, [\freq, 900]);
-b.set(\amp, 0.4, \pan, 1);
-s.freqscope; // if the freqscope is not already running
-b.set(\freq, 1400); // not band limited as we can see 
+    SynthDef(\triwave, {arg freq=400, pan=0, amp=1;
+    	var wave;
+    	wave = ({arg i;
+                    	var j = i * 2 + 1;
+                    	SinOsc.ar(freq * j, pi/2, 0.6 / j.squared);
+            	} ! 20).sum;
+    	Out.ar(0, Pan2.ar(wave * amp, pan));
+    }).add;
+    
+    a = Synth(\triwave, [\freq, 300]);
+    a.set(\amp, 0.3, \pan, -1);
+    b = Synth(\triwave, [\freq, 900]);
+    b.set(\amp, 0.4, \pan, 1);
+    s.freqscope; // if the freqscope is not already running
+    b.set(\freq, 1400); // not band limited as we can see 
 ~~~~~~~
 
 We have created various typical wave forms above in order to show how they are sums of sinusoidal waves. A good idea is to play with this further and create your own waveforms:
@@ -267,10 +214,8 @@ f.play;
 
 Not all sounds are harmonic. Many musical instruments are **inharmonic**, for example timpani drums, xylophones, and bells. Here the partials of the sound are not in a harmonic relationship (or multiples of some fundamental frequency). This does not mean that we can't detect pitch, as there will be certain partials that have stronger amplitude and longer duration than others. Since we know bells are inharmonic, the first thing we might try is to generate a sound with, say, 15 partials:
 
-{line-numbers=off}
-~~~~~~~
-{ ({ SinOsc.ar(rrand(80, 800), 0, 0.1)} ! 15).sum }.play
-~~~~~~~
+    { ({ SinOsc.ar(rrand(80, 800), 0, 0.1)} ! 15).sum }.play
+
 
 Try to run this a few times. What we hear is a wave form that might be quite similar to a bell at first, but then the resemblance disappears, because the partials do not fade out. If we add an envelope to each of these sinusoids, we get a different sound:
 
