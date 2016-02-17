@@ -30,44 +30,44 @@ We have already explored how to play a melody using a Task and a Routine (check 
 
 Function has a method called "fork" which will turn the function into a Routine (co-routine, and some could think of it as a "thread" - although technically it's not), but this allows for a process to run independently of what is happening elsewhere in the program. 
 
-Routine({
-	1.postln; 
-	Synth(\sine, [\freq, 220]);
-	0.5.wait;
-	2.postln;
-	Synth(\sine, [\freq, 220*2]);
-	0.5.wait;
-	3.postln;
-	Synth(\sine, [\freq, 220*3]);
-	0.5.wait;
-}).play
+    Routine({
+    	1.postln; 
+    	Synth(\sine, [\freq, 220]);
+    	0.5.wait;
+    	2.postln;
+    	Synth(\sine, [\freq, 220*2]);
+    	0.5.wait;
+    	3.postln;
+    	Synth(\sine, [\freq, 220*3]);
+    	0.5.wait;
+    }).play
 
 This could also be written as:
 
-{ 3.do({arg i; (i+1).postln; Synth(\sine, [\freq, 220*(i+1)]); 0.5.wait }) }.fork
+    { 3.do({arg i; (i+1).postln; Synth(\sine, [\freq, 220*(i+1)]); 0.5.wait }) }.fork
 
 Or unpacked:
 
-{ 
-	3.do({arg i; 
-		(i+1).postln; 
-		Synth(\sine, [\freq, 220*(i+1)]); 
-		0.5.wait;
-	}) 
-}.fork
+    { 
+    	3.do({arg i; 
+    		(i+1).postln; 
+    		Synth(\sine, [\freq, 220*(i+1)]); 
+    		0.5.wait;
+    	}) 
+    }.fork
 
 
 So with a little melody stored in an array we could play it repeatedly:
 
-m = [60, 63, 64, 61];
-
-{ inf.do({arg i; Synth(\sine, [\freq, m.wrapAt(i).midicps]); 0.5.wait }) }.fork
+    m = [60, 63, 64, 61];
+    
+    { inf.do({arg i; Synth(\sine, [\freq, m.wrapAt(i).midicps]); 0.5.wait }) }.fork
 
 The "fork" is running a routine and the routine is played by SuperCollider's default TempoClock.
 
 If you keep that code running and then evaluate:
 
-TempoClock.default.tempo = 2
+    TempoClock.default.tempo = 2
  
 You will see how the tempo changes, as the 0.5.wait in the Routine is half a beat of the tempo clock that has now changed its tempo.
 
@@ -85,27 +85,29 @@ Routines, Tasks and Patterns can all run by these 3 different clocks. You pass t
 ### SystemClock
 
 Let's have a quick look at the SystemClock:
-(
-SystemClock.sched(2.0,{ arg time;  
-	time.postln; 
-	0.5 // wait between next scheduled event
-});
-)
 
-(
-SystemClock.sched(2.0,{ arg time;  
-	"HI THERE! Long wait".postln; 
-	nil // no wait - no next scheduled event
-});
-)
+    (
+    SystemClock.sched(2.0,{ arg time;  
+    	time.postln; 
+    	0.5 // wait between next scheduled event
+    });
+    )
 
-// You can also schedule an event for an absolute time:
-(
-SystemClock.schedAbs( (thisThread.seconds + 4.0).round(1.0),{ arg time;
-	("the time is exactly " ++ time.asString 
-		++ " seconds since starting SuperCollider").postln;
-});
-)
+    (
+    SystemClock.sched(2.0,{ arg time;  
+    	"HI THERE! Long wait".postln; 
+    	nil // no wait - no next scheduled event
+    });
+    )
+
+You can also schedule an event for an absolute time:
+
+    (
+    SystemClock.schedAbs( (thisThread.seconds + 4.0).round(1.0),{ arg time;
+    	("the time is exactly " ++ time.asString 
+    		++ " seconds since starting SuperCollider").postln;
+    });
+    )
 
 ### AppClock
 
@@ -113,14 +115,14 @@ The AppClock works pretty much the same but uses different source clocks (Apples
 
 You could try to create a GUI which is updated by a clock.
 
-w = Window.new("oo", Rect(100, 100, 240, 100)).front;
-x = Slider.new(w, Rect(20, 20, 200, 40));
+    w = Window.new("oo", Rect(100, 100, 240, 100)).front;
+    x = Slider.new(w, Rect(20, 20, 200, 40));
 
-// This works
-{inf.do({x.value_(1.0.rand); 0.4.wait})}.fork(AppClock)
-
-// However this won't work (as it's using the TempoClock by default)
-{inf.do({x.value_(1.0.rand); 0.4.wait})}.fork
+    // This works
+    {inf.do({x.value_(1.0.rand); 0.4.wait})}.fork(AppClock)
+    
+    // However this won't work (as it's using the TempoClock by default)
+    {inf.do({x.value_(1.0.rand); 0.4.wait})}.fork
 
 You will get an error message that could become familiar:
 
