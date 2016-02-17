@@ -9,5 +9,6 @@
    * [The SC Language](PartI/chapter_3.md)
    * [Interfaces and Communication](PartI/chapter_4.md)
 * [Part II - Synthesis](part_ii_-_synthesis.md)
-    * [Additive Synthesis](PartII/chapter_5.md)
+   * [Additive Synthesis](PartII/chapter_5.md)
+* chapter_6
 
