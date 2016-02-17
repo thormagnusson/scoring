@@ -290,269 +290,262 @@ an example showing tempo changes
 
 We can try to play the above synth definitions with Patterns and it will play using the default arguments of patterns (see the Event source file). Let's start by exploring the Pbind pattern. As we saw in chapter 3, if you run the code below:
 
-().play // "()" is an empty Event dictionary
-Pbind().play // Pbind plays an empty Event
+    ().play // "()" is an empty Event dictionary
+    Pbind().play // Pbind plays an empty Event
 
 You can hear that there are default arguments, like a note played every second, an instrument is used (SuperCollider's \default) and a frequency (440Hz).
 
 In the example below, we use Pbind (Pattern that binds keys (synth def arguments) and their arguments). Here we pass the \sine synth def as the argument for the \instrument (again as defined in the Event class).
 
-Pbind(\instrument, \sine).play // it plays our synth definition
+    Pbind(\instrument, \sine).play // it plays our synth definition
 
-Pbind(\instrument, \sine, \freq, Pseq([60, 65, 57, 62].midicps)).play // it plays our synth definition
+    Pbind(\instrument, \sine, \freq, Pseq([60, 65, 57, 62].midicps)).play // it plays our synth definition
 
 Our \sine synth has a frequency argument, and we are sending the frequency directly. However, if we wanted we could also send 'note' or 'midinote' arguments, but here the values are converted internally to the \freq argument of \sine.
 
-Pbind(\instrument, \sine, \note, Pseq([0, 5, 7, 2])).play // it plays our synth definition
+    Pbind(\instrument, \sine, \note, Pseq([0, 5, 7, 2])).play // it plays our synth definition
 
-Pbind(\instrument, \sine, \midinote, Pseq([60, 65, 57, 62])).play // it plays our synth definition
+    Pbind(\instrument, \sine, \midinote, Pseq([60, 65, 57, 62])).play // it plays our synth definition
 
 
 Pattern definitions (Pdef) are a handy way to define and play patterns. They are a bit like Synth definitions in that they have a unique name and can be recompiled on the fly.
 
 
-(
-Pdef(\scale, Pbind(	\instrument, \sine,
-					\freq, Pseq([62, 64, 67, 69, 71, 74], inf).midicps,
-					\dur,  Pseq([0.25, 0.5, 0.25, 0.25, 0.5, 0.5], inf)
-)); 
-)
-
-a = Pdef(\scale).play;
-a.pause 	// pause. the stream
-a.resume 	// resume it
-a.stop 	// stop it (resets it)
-a.play 	// start again
+    (
+    Pdef(\scale, Pbind(	\instrument, \sine,
+    					\freq, Pseq([62, 64, 67, 69, 71, 74], inf).midicps,
+    					\dur,  Pseq([0.25, 0.5, 0.25, 0.25, 0.5, 0.5], inf)
+    )); 
+    )
+    
+    a = Pdef(\scale).play;
+    a.pause 	// pause. the stream
+    a.resume 	// resume it
+    a.stop 	// stop it (resets it)
+    a.play 	// start again
 
 Then we can set variables in our instrument using .set
-Pdef(\scale).set(\out, 20); // outbus 20 
-Pdef(\scale).set(\out, 0); // outbus 0 
 
-// here we set the duration of the envelope in our instrument
-Pdef(\scale).set(\envdur, 0.2);
+    Pdef(\scale).set(\out, 20); // outbus 20 
+    Pdef(\scale).set(\out, 0); // outbus 0 
+
+    // here we set the duration of the envelope in our instrument
+    Pdef(\scale).set(\envdur, 0.2);
 
 Patterns use default keywords defined in the Event class, so take care not to use those keywords in your synth definitions. If we had used dur instead of envdur for the envelope in our instrument, this would happen:
 
-Pdef(\scale).set(\dur, 0.1);
+    Pdef(\scale).set(\dur, 0.1);
 
 because dur is a keyword of Patterns (the main ones are \dur, \freq, \amp, \out, \midi)
 
-// resetting the freq info is not possible however :
-Pdef(\scale).set(\freq, Pseq([72,74,72,69,71,74], inf).midicps);
+resetting the freq info is not possible however :
 
-// one solution would be to resubmit the Pattern Definition:
-(
-Pdef(\scale, Pbind( \instrument, \sine,
-				\freq, Pseq([72,74,72,69,71,74], inf).midicps, // different sequence
-				\dur,  Pseq([0.25, 0.5, 0.25, 0.25, 0.5, 0.5], inf)
-)); 
-)
-// and it's still in our variable "a", it's just the definition that's different
-a.pause
-a.resume
+    Pdef(\scale).set(\freq, Pseq([72,74,72,69,71,74], inf).midicps);
 
-/////////// Patterns and environmental variables
-// or we could use Pdefn (read the helpfiles to compare Pdef and Pdefn)
-// (here we are using envrionment variables to refer to patterns)
+one solution would be to resubmit the Pattern Definition:
 
-// we use a Pdefn to hold the scale
-Pdefn(\scaleholder, { |arr| Pseq(arr.freqarr) });
-// and we add an array to it
-Pdefn(\scaleholder).set(\freqarr, Array.fill(6, {440 +(300.rand)} ));
+    (
+    Pdef(\scale, Pbind( \instrument, \sine,
+    				\freq, Pseq([72,74,72,69,71,74], inf).midicps, // different sequence
+    				\dur,  Pseq([0.25, 0.5, 0.25, 0.25, 0.5, 0.5], inf)
+    )); 
+    )
 
-// then we play a Pdef with the Pdefn
-Pdef(\scale, 
-		Pbind( 	\instrument, \synth1,
-				\freq, Pn(Pdefn(\scaleholder), inf), // loop
-				\dur, 0.4
-			)
-			
-); 
-a = Pdef(\scale).play;
+and it's still in our variable "a", it's just the definition that's different
 
-// and we can reset our scale 
-Pdefn(\scaleholder).set(\freqarr, Array.fill(3, {440 +(300.rand)} ));
+    a.pause
+    a.resume
+
+### Patterns and environmental variables
+
+Or we could use Pdefn (read the helpfiles to compare Pdef and Pdefn) (here we are using envrionment variables to refer to patterns)
+
+We use a Pdefn to hold the scale
+
+    Pdefn(\scaleholder, { |arr| Pseq(arr.freqarr) });
+    // and we add an array to it
+    Pdefn(\scaleholder).set(\freqarr, Array.fill(6, {440 +(300.rand)} ));
+
+then we play a Pdef with the Pdefn
+
+    Pdef(\scale, 
+    		Pbind( 	\instrument, \synth1,
+    				\freq, Pn(Pdefn(\scaleholder), inf), // loop
+    				\dur, 0.4
+    			)
+    			
+    ); 
+    a = Pdef(\scale).play;
+    
+    // and we can reset our scale 
+    Pdefn(\scaleholder).set(\freqarr, Array.fill(3, {440 +(300.rand)} ));
 
 
-// another example
-(
-Pdefn(\deg, Pseq([0, 3, 2],inf));
+Another example
 
-Pset(\instrument, \synth1, 
-	Ppar([
-		Pbind(\degree, Pdefn(\deg)),
-		Pbind(\degree, Pdefn(\deg), \dur, 1/3)
-])
-).play;
-)
-
-Pdefn(\deg, Prand([0, 3, [1s, 4]],inf));
-Pdefn(\deg, Pn(Pshuf([4, 3, 2, 7],2),inf));
-Pdefn(\deg, Pn(Pshuf([0, 3],2),inf));
-
-(
-Pdefn(\deg, Plazy { var pat;
-				pat = [Pshuf([0, 3, 2, 7, 6],2), Pshuf([3, 2, 6],2), Pseries(11, -1, 11)].choose;
-				Pn(pat, inf)
-		});
-)
+    (
+    Pdefn(\deg, Pseq([0, 3, 2],inf));
+    
+    Pset(\instrument, \synth1, 
+    	Ppar([
+    		Pbind(\degree, Pdefn(\deg)),
+    		Pbind(\degree, Pdefn(\deg), \dur, 1/3)
+    ])
+    ).play;
+    )
+    
+    Pdefn(\deg, Prand([0, 3, [1s, 4]],inf));
+    Pdefn(\deg, Pn(Pshuf([4, 3, 2, 7],2),inf));
+    Pdefn(\deg, Pn(Pshuf([0, 3],2),inf));
+    
+    (
+    Pdefn(\deg, Plazy { var pat;
+    				pat = [Pshuf([0, 3, 2, 7, 6],2), Pshuf([3, 2, 6],2), Pseries(11, -1, 11)].choose;
+    				Pn(pat, inf)
+    		});
+    )
 
 
 /////////////// p
 
 
-(
-Pdef(\player).set(\instrument, \synth1);
-
-Pdef(\player,
-	Pbind(
-		\instrument, 	Pfunc({ |e| e.instrument }),
-		\midinote, 	Pseq([45,59,59,43,61,43,61,61,45,33,31], inf),
-		\dur, 		Pseq ([0.25,1,0.25,0.5,0.5,0.5,0.125,0.125,0.5,0.25,0.25], inf),
-		\amp, 		Pseq ([1,0.1,0.2,1,0.1125,0.1125,1,0.1125,0.125,0.25,1,0.5], inf)
-	)
-);
-)
-
-Pdef(\player).play;
-
-Pdef(\player).set(\instrument, \synth1);
-Pdef(\player).set(\envdur, 0.1);
-Pdef(\player).set(\envdur, 0.25);
-Pdef(\player).set(\envdur, 1);
-Pdef(\player).set(\instrument, \sine);
+    (
+    Pdef(\player).set(\instrument, \synth1);
+    
+    Pdef(\player,
+    	Pbind(
+    		\instrument, 	Pfunc({ |e| e.instrument }),
+    		\midinote, 	Pseq([45,59,59,43,61,43,61,61,45,33,31], inf),
+    		\dur, 		Pseq ([0.25,1,0.25,0.5,0.5,0.5,0.125,0.125,0.5,0.25,0.25], inf),
+    		\amp, 		Pseq ([1,0.1,0.2,1,0.1125,0.1125,1,0.1125,0.125,0.25,1,0.5], inf)
+    	)
+    );
+    )
+    
+    Pdef(\player).play;
+    
+    Pdef(\player).set(\instrument, \synth1);
+    Pdef(\player).set(\envdur, 0.1);
+    Pdef(\player).set(\envdur, 0.25);
+    Pdef(\player).set(\envdur, 1);
+    Pdef(\player).set(\instrument, \sine);
 
 
 ///////////////////////////////////////////////////////
 
 
-(
-~scale = [62,67,69, 77];
+    (
+    ~scale = [62,67,69, 77];
+    
+    c = Pdef(\p04b, 
+    		Pbind(\instrument, \synth1, 
+    					\freq, (Pseq.new(~scale, inf)).midicps, // freq arg
+    					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
+    		)
+    );
+    
+    c = Pdef(\p04c, 
+    		Pbind(\instrument, \synth1,
+    					\freq, (Pseq.new(~scale, inf)).midicps, // freq arg
+    					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
+    		)
+    );
+    )
+    
+    Pdef(\p04b).quant_([2, 0, 0]);
+    Pdef(\p04c).quant_([2, 0.5, 0]); // offset by half a beat
+    Pdef(\p04b).play;
+    Pdef(\p04c).play;
 
-c = Pdef(\p04b, 
-		Pbind(\instrument, \synth1, 
-					\freq, (Pseq.new(~scale, inf)).midicps, // freq arg
-					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
-		)
-);
+(quant can't be reset in real-time, so we use align to align patterns). align takes the same arguments as quant (see helpfile of Pdef)
 
-c = Pdef(\p04c, 
-		Pbind(\instrument, \synth1,
-					\freq, (Pseq.new(~scale, inf)).midicps, // freq arg
-					\dur, Pseq.new([1, 1, 1, 1], inf);  // dur arg
-		)
-);
-)
-
-Pdef(\p04b).quant_([2, 0, 0]);
-Pdef(\p04c).quant_([2, 0.5, 0]); // offset by half a beat
-Pdef(\p04b).play;
-Pdef(\p04c).play;
-
-// (quant can't be reset in real-time, so we use align to align patterns).
-// align takes the same arguments as quant (see helpfile of Pdef)
-
-Pdef(\p04c).align([4, 0, 0]);
-Pdef(\p04c).align([4, 0.75, 0]); // offset by 3/4 a beat
-
+    Pdef(\p04c).align([4, 0, 0]);
+    Pdef(\p04c).align([4, 0.75, 0]); // offset by 3/4 a beat
 
 
+Another useful pattern is Tdef (Task patterns)
+
+    Tdef(\x, { loop({ Synth(\sine, [\freq, 200+(440.rand)]); 0.25.wait; }) });
+
+    TempoClock.default.tempo = 2; // it runs on the default tempo clock
+
+    Tdef(\x).play(quant:1);
+    Tdef(\x).stop;
+
+and we can redefine the definition "x" in realtime whilst playing
+
+    Tdef(\x, { loop({ Synth(\synth1, [\freq, 200+(440.rand)]); 1.wait; }) });
+    
+    Tdef(\y, { loop({ Synth(\synth1, [\freq, 1200+(440.rand)]); 1.wait; }) });
+    Tdef(\y).play(quant:1);
+    
+    Tdef(\y).stop;
 
 
-// another useful pattern is Tdef (Task patterns)
+to change the values in a pattern in realtime, use List instead of Array:
 
-Tdef(\x, { loop({ Synth(\sine, [\freq, 200+(440.rand)]); 0.25.wait; }) });
+    ~notes = List[63, 61, 64, 65];
+    
+    Pbind(
+    	\midinote, Pseq(~notes, inf),
+    	\dur, Pseq([0.4, 0.2, 0.1, 0.2], inf)
+    ).play;
+    
+    ~notes[1] = 80
 
-TempoClock.default.tempo = 2; // it runs on the default tempo clock
+yet another (known?) melody
 
-Tdef(\x).play(quant:1);
-Tdef(\x).stop;
+    (
+    Pbind(
+     	\midinote, Pseq([72, 76, 79, 71, 72, 74, 72, 81, 79, 84, 79, 77, 76, 77, 76], 1),
+     	\dur, Pseq([4, 2, 2, 3, 0.5, 0.5, 4, 4, 2, 2, 2, 1, 0.5, 0.5, 2]/4, 1)
+     ).play
+    )
 
-// and we can redefine the definition "x" in realtime whilst playing
-Tdef(\x, { loop({ Synth(\synth1, [\freq, 200+(440.rand)]); 1.wait; }) });
+### USING Pfx (effects patterns)
 
-Tdef(\y, { loop({ Synth(\synth1, [\freq, 1200+(440.rand)]); 1.wait; }) });
-Tdef(\y).play(quant:1);
+Make the synthdef and add it
 
-Tdef(\y).stop;
+    SynthDef(\testenv2, { arg in=0, dur=2;
+    	var env;
+    	env = EnvGen.kr(Env.sine(dur), doneAction:2).poll;
+    	XOut.ar(0, 1, (In.ar(in, 1)+WhiteNoise.ar(0.1)) * env); // add noise for clarity
+    }).add;
+    
+    
+    p = Pbind(\degree, Pseq([0, 4, 4, 2, 8, 3, 2, 0]), \dur, 0.5);
+    p.play
+    q = Pfx(p, \testenv, \dur, 4); // play it... all working (sine env is 4 secs)
+    q.play
 
+Now write the def to disk
 
+    SynthDef(\testenv2, { arg in=0, dur=2;
+    	var env;
+    	env = EnvGen.kr(Env.sine(dur), doneAction:2).poll;
+    	XOut.ar(0, 1, (In.ar(in, 1)+WhiteNoise.ar(0.1)) * env); // add noise for clarity
+    }).writeDefFile;
+    
+    
+    // quit SuperCollider, open it again and now try this
+    p = Pbind(\degree, Pseq([0, 4, 4, 2, 8, 3, 2, 0]), \dur, 0.5);
+    q = Pfx(p, \testenv, \dur, 4); // not working (sine env is 2 secs, the synthdef default)
+    q.play
 
+but here is the trick, read the SynthDescLib and try again!
 
-// to change the values in a pattern in realtime, use List instead of Array:
+    SynthDescLib.global.read;
+    q = Pfx(p, \testenv, \dur, 4); // not working (sine env is 2 secs, the synthdef default)
+    q.play
 
-~notes = List[63, 61, 64, 65];
+rendering the pattern as soundfile to disk (it will be written to your SuperCollider folder)
 
-Pbind(
-	\midinote, Pseq(~notes, inf),
-	\dur, Pseq([0.4, 0.2, 0.1, 0.2], inf)
-).play;
-
-~notes[1] = 80
-
-
-
-
-
-// yet another (known?) melody
-(
-Pbind(
- 	\midinote, Pseq([72, 76, 79, 71, 72, 74, 72, 81, 79, 84, 79, 77, 76, 77, 76], 1),
- 	\dur, Pseq([4, 2, 2, 3, 0.5, 0.5, 4, 4, 2, 2, 2, 1, 0.5, 0.5, 2]/4, 1)
- ).play
-)
-
-
-
-// ----------- USING Pfx (effects patterns)
-
-
-// make the synthdef and add it
-
-SynthDef(\testenv2, { arg in=0, dur=2;
-	var env;
-	env = EnvGen.kr(Env.sine(dur), doneAction:2).poll;
-	XOut.ar(0, 1, (In.ar(in, 1)+WhiteNoise.ar(0.1)) * env); // add noise for clarity
-}).add;
-
-
-p = Pbind(\degree, Pseq([0, 4, 4, 2, 8, 3, 2, 0]), \dur, 0.5);
-p.play
-q = Pfx(p, \testenv, \dur, 4); // play it... all working (sine env is 4 secs)
-q.play
-
-
-// now write the def to disk
-
-SynthDef(\testenv2, { arg in=0, dur=2;
-	var env;
-	env = EnvGen.kr(Env.sine(dur), doneAction:2).poll;
-	XOut.ar(0, 1, (In.ar(in, 1)+WhiteNoise.ar(0.1)) * env); // add noise for clarity
-}).writeDefFile;
-
-
-// quit SuperCollider, open it again and now try this
-p = Pbind(\degree, Pseq([0, 4, 4, 2, 8, 3, 2, 0]), \dur, 0.5);
-q = Pfx(p, \testenv, \dur, 4); // not working (sine env is 2 secs, the synthdef default)
-q.play
-
-
-// but here is the trick, read the SynthDescLib and try again!
-
-SynthDescLib.global.read;
-q = Pfx(p, \testenv, \dur, 4); // not working (sine env is 2 secs, the synthdef default)
-q.play
-
-
-
-// rendering the pattern as soundfile to disk (it will be written to your SuperCollider folder)
-
-q.render(
-	"ixi_tutorial_render_test.aif", 
-	4, 
-	sampleFormat: "int16", 
-	options: Server.default.options.numOutputBusChannels_(2)
-);
+    q.render(
+    	"ixi_tutorial_render_test.aif", 
+    	4, 
+    	sampleFormat: "int16", 
+    	options: Server.default.options.numOutputBusChannels_(2)
+    );
 
 
 
