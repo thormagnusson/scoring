@@ -4,7 +4,7 @@ This chapter will introduce the fundamentals for creating and running a simple S
 
 ## The semicolon, brackets and running a program
 
-The semicolon ";" is what divides one instruction from the next. It defines a line of code. After the semicolon, the interpreter looks at next line. There has to be semicolon after each line of code. Forgetting it will give you errors printed in the post console.
+The semicolon ";" is what divides one instruction from the next. It defines a *line* of code. After the semicolon, the interpreter looks at next line. There has to be semicolon after each line of code. Forgetting it will give you errors printed in the post console.
 
 This code will work fine if you evaluate only this line:
 
@@ -13,17 +13,17 @@ This code will work fine if you evaluate only this line:
 But not this, if you evaluate both lines (by highlighting both and evaluating them with Shift+Return):
 
     "Hello World".postln
-    "This was fun".postln;
+    "Goodbye World".postln;
 
 Why not? Because the interpreter (the SC language) will not understand 
 
-    "Hello World".postln"This was fun".postln; 
+    "Hello World".postln"Goodbye World".postln; 
 
 However, this will work:
 
-    "Hello World".postln; "This was fun".postln; 
+    "Hello World".postln; "Goodbye World".postln; 
 
-It is up to you how you format your code, but typically you want to keep it clearly readable for other humans as well. There is however a style of SC coding used for Tweeting, where the 140 character limit introduces interesting constraints for composers. Here is a Twitter composition by Tim Walters, but as you can see, it is not good for human readability although it sounds good (The language doesn’t care about human readability, but we do):
+It is up to you how you format your code, but you'd typically want to keep it readable for yourself in the future and other readers too. There is however a style of SC coding used for Tweeting, where the 140 character limit introduces interesting constraints for composers. Below is a Twitter composition by Tim Walters, but as you can see, it is not good for human readability although it sounds good (The language doesn’t care about human readability, but we do):
 
     play{HPF.ar(({|k|({|i|SinOsc.ar(i/96,Saw.ar(2**(i+k))/Decay.ar(Impulse.ar(0.5**i/k),[k*i+1,k*i+1*2],3**k))}!6).product}!32).sum/2,40)}
 
@@ -33,7 +33,7 @@ It can get tiring to having to select many lines of code and here is where brack
     var amp = 0.5;
     {SinOsc.ar(freq, 0, amp}.play;
 
-will not work unless you highlight all three lines. Imagine if these were 100 lines, and you would have to do some tedious scrolling up and down the document. So using brackets, you can simply double click after or before a bracket, and it will highlight all the text between the matching brackets. 
+will not work unless you highlight all three lines. Imagine if these were 100 lines: you would have to do some tedious scrolling up and down the document. So using brackets, you can simply double click after or before a bracket, and it will highlight all the text between the matching brackets. 
 
     (
     var freq = 440;
@@ -41,7 +41,7 @@ will not work unless you highlight all three lines. Imagine if these were 100 li
     {SinOsc.ar(freq, 0, amp}.play;
     )
 
-##Matching brackets
+## Matching brackets
 
 Often when writing SuperCollider code, you will experience errors whose origin you can’t figure out.   Double clicking between brackets and observe whether they are matching properly is one of the key methods of debugging SuperCollider code.
 
@@ -64,23 +64,21 @@ Note that the • sign is where the interpreter finds the error.
 
 You have already posted into the post window (many other languages use a “print” and “println” for this purpose). But let’s explore the post window a little further. 
 
-
-```
-(
-"hello".post; // post something
-"one, two, three".post;
-)
+    (
+    "hello".post; // post something
+    "one, two, three".post;
+    )
 
 
-(
-"hello there".postln; // post something and make a line break
-"one, two, three".postln;
-)
+    (
+    "hello there".postln; // post something and make a line break
+    "one, two, three".postln;
+    )
 
-1+4; // returns 5
+    1+4; // returns 5
 
-Scale.minor.degrees // returns an array with the degrees in the minor scale
-```
+    Scale.minor.degrees // returns an array with the degrees in the minor scale
+
 You can also use postf:
 
     "the first value is %, and the second one is % \n".postf(1111, 9999);
@@ -95,13 +93,13 @@ Example
 
     Array.fill(1000, {100.rand}).postln; // you see you get ...etc...
 
-Whereas
+Whereas,
 
     Post << Array.fill(1000, {100.rand}) // you get the whole list
 
 ### The Documentation system (The help system)
 
-The documentation system in SuperCollider is a good source for information and learning. It includes introduction tutorials, overviews and documentation for almost every class in SuperCollider. The documentation files typically contain examples of how to use the specific class/Ugen, and thus serves as a great source for learning and understanding. Many SC users go straight into the documentation when they start writing code, using it as a template and copy-paste the examples into their projects. 
+The documentation system in SuperCollider is a good source for information and learning. It includes introduction tutorials, overviews and documentation for almost every class in SuperCollider. The documentation files typically contain examples of how to use the specific class/UGen, and thus serves as a great source for learning and understanding. Many SC users go straight into the documentation when they start writing code, using it as a template and copy-paste the examples into their projects. 
 
 So if you highlight the word Array in an SC document and hit Cmd+d or Ctrl+d (d for documentation), you will get the documentation for that class. You will see the superclasses/subclasses and learn about all the methods that the Array class has.
 
@@ -181,9 +179,9 @@ As you can see, the ‘freq’ variable is used in various places in the above s
 
 ## Functions
 
-Functions are an important feature of SuperCollider and most other programming languages. They are used to encapsulate algorithms or functionality that we only want to write once, but use in many places at various times. They can be seen as a black box or a factory that takes some input, parses it, and returns some output. Just as a sophisticated coffee machine might take coffee beans and water as input, it then grounds the beans, boils the water, brews the coffee, and finally outputs a lovely drink. The key point is that you don’t need (or want) to know precisely how all this happens. It’s enough to know where to fill up the beans and water, and then how to operate the buttons of the machine (strength, number of cups, etc.). The coffee machine is a [black box] (http://en.wikipedia.org/wiki/Black_box).
+Functions are an important feature of SuperCollider and most other programming languages. They are used to encapsulate algorithms or functionality that we only want to write once, but use in different places at various times. They can be seen as a black box or a factory that takes some input, parses it, and returns some output. Just as a sophisticated coffee machine might take coffee beans and water as input, it then grounds the beans, boils the water, brews the coffee, and finally outputs a lovely drink. The key point is that you don’t need (or want) to know precisely how all this happens. It’s enough to know where to fill up the beans and water, and then how to operate the buttons of the machine (strength, number of cups, etc.). The coffee machine is a [black box] (http://en.wikipedia.org/wiki/Black_box).
 
-Functions in SuperCollider are within curly brackets ‘{}’
+Functions in SuperCollider are notated with curly brackets ‘{}’
 
 Let’s create a function that posts the value of 44. We store it in a variable ‘f’, so we can *call* it later.
 
@@ -360,7 +358,8 @@ a = Dictionary.new
 a.put(\C, 60)
 a.put(\Cs, 61)
 a.put(\D, 62)
-a.put(\Ds, 63)
+a[\Ds] = 63 // same as .put
+// and now, let's get the values
 a.at(\D)
 a[\D#] // same as .at
 
