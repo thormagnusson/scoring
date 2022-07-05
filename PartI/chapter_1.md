@@ -519,9 +519,11 @@ The final thing we need to learn in this chapter is looping. Looping is one of t
 
 In many programming languages this is done with a [for-loop] (http://en.wikipedia.org/wiki/For_loop):
 
-    for(int i = 0; i > 10, i++) {
-    	println("i is now" + i);		
-    }
+```c
+for(int i = 0; i > 10, i++) {
+    println("i is now" + i);		
+}
+```
 
 The above code will work in Java, C, JavaScript and many other languages. But SuperCollider is a fully object orientated language, where everything is an object - which can have methods - so an integer can have a method like .neg, or .midicps, but also .do (the loop).
 
@@ -597,14 +599,14 @@ This is enough about the language. Now is the time to dive into making sounds an
 
 Each UGen or Class in SuperCollider has a class definition in a class file. These files are compiled every time SuperCollider is started and become the application environment we are using. SC is an "interpreted" language. (As opposed to a "compiled" language like C or Java). If you add a new class to SuperCollider, you need to *recompile* the language (there is a menu item for that), or simply start again. 
 
-XXX FIX THIS:
+XXX FIX THIS: [ TODO check the windows shortcuts too, usually just apple/cmd = control - Andy ]
 - For checking the sourcefile, type Apple + i (or cmd + i) when a class is highlighted (say SinOsc)
 - For checking the implementations of a method (which classes support it), type Apple + Y - poll
 - For checking references to a method (which classes support it), type Shift + Apple + Y - poll
 
     UGen.dumpSubclassList // UGen is a class. Try dumping LFSaw for example
 
-    UGen.browse  // examine methods interactively in a GUI (OSX)
+    UGen.browse  // examine methods interactively in a GUI (OSX [ TODO and Windows, but is it not on Linux ? - Andy ] )
     
     SinOsc.dumpFullInterface  // list all methods for the classhierarchically
     SinOsc.dumpMethodList  // list instance methods alphabetically
