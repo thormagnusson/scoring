@@ -87,7 +87,7 @@ The beauty of UGens is how one can connect the output of one to the input of ano
     	// we create a slow oscillator in control rate
     	a = SinOsc.kr(1);
     	// the output of 'a' is used to multiply the frequency of a saw wave
-    	// resulting in a frequency from 440 to 660. Why?
+    	// resulting in a frequency from 220 to 660. Why?
     	b = Saw.ar(220*(a+2), 0.5);
     	// and here we use 'a' to control amplitude (from -0.5 to 0.5)
     	c = Saw.ar(110, a*0.5);
