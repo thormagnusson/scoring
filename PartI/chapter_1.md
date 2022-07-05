@@ -358,7 +358,7 @@ A dictionary is a collection of items where *keys* are mapped to *values*. Here,
     a[\Ds] = 63 // same as .put
     // and now, let's get the values
     a.at(\D)
-    a[\D#] // same as .at
+    a[\Ds] // same as .at
 
     a.keys
     a.values
