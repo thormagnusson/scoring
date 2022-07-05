@@ -333,19 +333,16 @@ Arrays can contain other arrays, containing other arrays of any dimensions.
     // We could put a new array into a[0][0] (an integer)
     a[0][0] = f.value
 
-Above we added 12 to the minor scale.
+Above we added 12 to an array, the minor scale in the previous instance.
 
-    m = Scale.minor.degrees;
+    m = []    // Start with an new, empty array
     m.add(12) // but try to run this line many times, the array won't grow forever
-
-[ TODO : In SuperCollider 3.12.2 this gives "ERROR: Primitive '_ArrayAdd' failed. Attempted write to immutable object." as above - Andy ]
 
 ### Lists
 
 It is here that the List class becomes useful. 
 
-
-    l = List.new;
+    l = List.new;   // Start with an new, empty list
     l.add(100.rand) // try to run this a few times and watch the list grow
 
 Lists are like arrays - and implement many of the same methods - but the are slightly more expensive than arrays. In the example above you could simply do ‘a = a.add(100.rand)’ if ‘a’ was an array, but many people like lists for reasons we will discuss later.
