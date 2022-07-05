@@ -125,7 +125,7 @@ Comments are red by default, but can be any colour (in the Format menu choose �
 Here is a mantra to memorise: Variables are containers of some value. They are names or references to values that could change (their value can vary). So we could create a variable that is a property of yourself called age. Every year this variable will increase by one integer (a whole number). So let us try this now:
 
     var age = 33;
-    age = age + 1; // here the variable ‘age’ gets a new value, or 33 + 1
+    age = age + 1; // here the variable 'age' gets a new value, or 33 + 1
     age.postln; // and it posts 34
 
 SuperCollider is not strongly typed so there is no need to declare the data type of variables. Data types (in other languages) include : integer, float, double, string, custom objects, etc... But in SuperCollider you can create a variable that contains an integer at one stage, but later contains reference to a string or a float. This can be handy, but one has to be careful as this can introduce bugs in your code.
@@ -145,9 +145,9 @@ SuperCollider has scope, so if you declare a variable within a certain scope, su
     var v, a;
     v = 22;
     a = 33;
-    “The value of a is : “.post; a.postln;
+    "The value of a is : ".post; a.postln;
     )
-    “The value of a is now : ”.post; a.postln; // then run this line 
+    "The value of a is now : ".post; a.postln; // then run this line 
 
 
 So ‘a’ is a global variable. This is good for prototyping and testing, but not recommended as a good software design. A variable with the name ‘myvar’ could not be global – only single lowercase characters.
@@ -237,12 +237,12 @@ SuperCollider contains quite a lot of examples of “syntax sugar”, i.e., wher
 You will see the following
 
     f = { arg string; string.postln; } // we will post the string that comes into the function
-    f.value(“hi there") // and here we call the function passing “hi there” as the argument.
+    f.value("hi there") // and here we call the function passing "hi there" as the argument.
 
 
 Often written in this form:
 
-    f = {|string| string.postln;} // arguments can be defined within two pipes ‘|’
+    f = {|string| string.postln;} // arguments can be defined within two pipes '|'
     f.("hi there") // and you can skip the .value and just write a dot (.)
 
 ## Arrays, Lists and Dictionaries
@@ -274,7 +274,7 @@ What happened here is that we tell the Array class to fill a new array with five
 We can now play a little bit with that function that we pass to the array creation:
 
 
-    a = Array.fill(5, { arg i; i }); // create a function with the iterator (‘i’) argument
+    a = Array.fill(5, { arg i; i }); // create a function with the iterator ('i') argument
     a = Array.fill(5, { arg i; (i+1)*11 }); // the same as the first array we created
     a = Array.fill(5, { arg i; i*i });
     a = Array.series(5, 10, 2); // a new method (series). 
@@ -291,28 +291,28 @@ m is here an array with the following values: [ 0, 2, 3, 5, 7, 8, 10 ]. So in a 
     m = m.add(12); // you might want to add the octave (12) into your array
     m = m+60 // here we simply add 60 to all the values in the array
     m = m.midicps // and here we turn the MIDI notes into their frequency values
-    m = m.cpsmidi // but let’s turn them back to MIDI values for now
+    m = m.cpsmidi // but let's turn them back to MIDI values for now
 
 We could now play with the ‘m’ array a little. In an algorithmic composition, for example, you might want to pick a random note from the minor scale
 
-    n = m.choose; // choose a random MIDI note and store it in the variable ’n’
+    n = m.choose; // choose a random MIDI note and store it in the variable 'n'
     x = m.scramble; // we could create a melody by scrambling the array
     x = m.scramble[0..3] // scramble the list and select the first 4 notes
     p = m.mirror // mirror the array (like an ascending and descending scale)
 
 You will note that in ‘x = m.scramble’ above, the ‘x’ variable contains an array with a scrambled version of the ‘m’ array. The ‘m’ array is still intact: you haven’t scrambled that one, you’ve simply said “put a scrambled version of ‘m’ into variable ‘x’.” So the original ‘m’ is still there. If you really wanted to scramble ‘m’ you would have to do:
   
-    m = m.scramble; // a scrambled version of the ‘m’ array is put back into the ‘m’ variable
-    // But now it’s all scrambled up. Let’s sort it into ascending numbers again:
+    m = m.scramble; // a scrambled version of the 'm' array is put back into the 'm' variable
+    // But now it's all scrambled up. Let's sort it into ascending numbers again:
     m = m.sort
 
 Arrays can contain anything, and in SuperCollider, they can contain values of mixed types, such as integers, strings, floats, and so on.
 
 
-    a = [1, “two”, 3.33, Scale.minor] // we mix types into the array.
+    a = [1, "two", 3.33, Scale.minor] // we mix types into the array.
     // This can be dangerous as the following
     a[0]*10 // will work
-    a[1]*10 // but this won’t, as you cant multiply the word “two” with 10 
+    a[1]*10 // but this won't, as you cant multiply the word "two" with 10 
 
 
 Arrays can contain other arrays, containing other arrays of any dimensions.
@@ -337,7 +337,7 @@ Above we added 12 to the minor scale.
 
 
     m = Scale.minor.degrees;
-    m.add(12) // but try to run this line many times, the array won’t grow forever
+    m.add(12) // but try to run this line many times, the array won't grow forever
 
 ### Lists
 
@@ -407,7 +407,7 @@ So to really understand a class like Array or List you need to read the document
 
     Array.openHelpFile // get the documentation of the Array class
     Array.dumpInterface // get the interface or the methods of the Array class
-    Array.dumpFullInterface // get the methods of Array’s superclasses as well.
+    Array.dumpFullInterface // get the methods of Array's superclasses as well.
 
 You can see that in the .dumpFullInterface method will tell you all the methods Array *inherits* from its superclasses.
 
@@ -430,8 +430,8 @@ if( hungry, { eat } );
 So let’s play with this:
 
 
-    if( true, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-    if( false, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( true, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
+    if( false, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
 
 You can see that true and false are keywords in SuperCollider. They are so called Boolean values. You should not use those as variables (well, you can’t). In digital systems, we operate in binary code, in 1s and 0s. True is associated with 1 and false with 0. 
 
@@ -483,8 +483,8 @@ And we also use comparison operators
 
 You might not realise it yet, but knowing what you now know is very powerful and it is something you will use all the time for synthesis, algorithmic composition, instrument building, sound installations, and so on. So make sure that you understand this properly. Let's play with this a bit more in if-statements:
 
-    if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-    if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
+    if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
     // and things can be a bit more complex:
     if( (3 < 4) && (true != false), {"TRUE".postln;}, {"FALSE".postln;});
 
