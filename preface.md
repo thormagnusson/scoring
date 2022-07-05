@@ -8,6 +8,6 @@ This book is the outcome of teaching SuperCollider in various British higher edu
 
 The aim with this book is the same as my initial tutorials written in 2005, i.e., to serve as a good undergraduate introduction to SuperCollider programming, audio synthesis, algorithmic composition, and interface building of innovative creative audio systems. I do hope that my past and future students will find this work useful, and I sincerely hope that it also is beneficial to anyone who decides to embark upon the exciting expedition into the fantastic and enticing world of SuperCollider: the ideal workshop for people whose creative material is sound.
 
-I encourage any reader who finds bugs, errors, or simply would like a better explanation of a topic to give me feedback through this book’s [feedback channel]: (https://www.gitbook.com/book/thormagnusson/scoring/discussions).
+I encourage any reader who finds bugs, errors, or simply would like a better explanation of a topic to give me feedback through this book’s [feedback channel]: (https://github.com/thormagnusson/scoring/issues).
 
 Brighton, February, 2016.
