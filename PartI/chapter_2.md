@@ -10,7 +10,7 @@ This chapter will introduce the SuperCollider server for the most basic purposes
 
 ## Booting the Server
 
-When you "boot the server", you are basically starting a new process on your computer that does not have a GUI (Graphical User Interface). If you observe the list of running processes of your computer, you will see that when you boot the server, a new process will appear (try typing "top" into a Unix Terminal). The server can be booted through a menu command (Menu-> XXX), or through a command line. 
+When you "boot the server", you are basically starting a new process on your computer that does not have a GUI (Graphical User Interface). If you observe the list of running processes of your computer, you will see that when you boot the server, a new process will appear (try typing "top" into a Unix Terminal or check Windows' Task Manager). The server can be booted through a menu command (Server -> <span style="text-decoration: underline">B</span>oot Server), by Ctrl-B (or Cmd/Apple-B) or through a command line. 
 
 ## The 's' Variable
 
@@ -28,7 +28,7 @@ The 's' variable is a unique variable in SuperCollider, as there is a convention
 
 We can explore creating our own servers with specific ports and IP addresses:
 
-    n = NetAddr("127.0.0.1", 57200); // IP (get it from whatsmyip.org) and port
+    n = NetAddr("127.0.0.1", 57200); // IP and port
     p = Server.new("hoho", n); // create a server with the specific net address
     p.makeWindow; // make a GUI window
     p.boot; // boot it
