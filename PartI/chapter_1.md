@@ -162,18 +162,18 @@ But typically we just declare the variable (var) in the beginning of the program
 
 But why use variables at all? Why not simply write the numbers or the value wherever we need it? Let’s take one example that should demonstrate clearly why they are useful:
 
-```{
- // declare the variables
-var freq, oscillator, filter, signal;
-freq = 333; // set the frequency variable
- // create a Saw wave oscillator with two channels
-oscillator = Saw.ar([freq, freq+2]);
-// use a resonant low pass filter on the oscillator
-filter = RLPF.ar(oscillator, freq*4, 0.25);
-// multiply the signal by 0.5 to lower the amplitude 
-signal = filter * 0.5;
-}.play;
-```
+
+    {
+        // declare the variables
+        var freq, oscillator, filter, signal;
+        freq = 333; // set the frequency variable
+        // create a Saw wave oscillator with two channels
+        oscillator = Saw.ar([freq, freq+2]);
+        // use a resonant low pass filter on the oscillator
+        filter = RLPF.ar(oscillator, freq*4, 0.25);
+        // multiply the signal by 0.5 to lower the amplitude 
+        signal = filter * 0.5;
+    }.play;
 
 As you can see, the ‘freq’ variable is used in various places in the above synthesizer. You can now change the value of the variable to something like 500, and it the frequency will ‘automatically’ be turned into 500 Hz in the left channel, 502 Hz in the right, and the cutoff frequency will be 2000 Hz. So instead of changing these variables throughout the code, you change it in one place and its value magically plugged into every location where that variable is used.
 
@@ -288,7 +288,9 @@ You might wonder why this is so fantastic or important. The fact is that arrays 
 m is here an array with the following values: [ 0, 2, 3, 5, 7, 8, 10 ]. So in a C scale, 0 would be C, 2 would be D (two half notes above C), 3 would be E flat, and so on. We could represent those values as MIDI notes, where 60 is the C note (~ 261Hz). And we could even look at the actual frequencies in Hertz of those MIDI notes. (Those frequencies would be passed to the oscillators as they are expecting frequencies and not MIDI notes as arguments).
 
     m = Scale.minor.degrees; // Scale class returns the degrees of the minor scale
-    m = m.add(12); // you might want to add the octave (12) into your array
+    m = m.add(12); // you might want to add the octave (12) into your array 
+[ TODO : In SuperCollider 3.12.2 this doesn't work at this point, you get ERROR: Primitive '_ArrayAdd' failed. Attempted write to immutable object. - after running one of the lines below it then works. I don't understand why well enough to explain, but have an inkling (the array contains a refernce to Scale.minor.degrees rather than the values [ 0, 2, 3, 5, 7, 8, 10 ] until something forces it to, right ? ) - Andy ]
+
     m = m+60 // here we simply add 60 to all the values in the array
     m = m.midicps // and here we turn the MIDI notes into their frequency values
     m = m.cpsmidi // but let's turn them back to MIDI values for now
@@ -317,27 +319,26 @@ Arrays can contain anything, and in SuperCollider, they can contain values of mi
 
 Arrays can contain other arrays, containing other arrays of any dimensions.
 
-```
-// a function that will create a 5 item array with random numbers from 0 to 10
-f = { Array.fill(5, { 10.rand }) }; // array generating function 
-a = Array.fill(10, f.value);  // create another array with 10 items of the above array
-// But the above was evaluated only once. Why? 
-// Because, you need to pass it a function to get a different array every time. Like this:
-a = Array.fill(10, { f.value } );  // create another array with 10 items of the above array
-// We can get at the first array and see it’s different from the second array
-a[0]
-a[1]
-// We could put a new array into a[0] (that slot contains an array)
-a[0] = f.value
-// We could put a new array into a[0][0] (an integer)
-a[0][0] = f.value
-```
+    // a function that will create a 5 item array with random numbers from 0 to 10
+    f = { Array.fill(5, { 10.rand }) }; // array generating function 
+    a = Array.fill(10, f.value);  // create another array with 10 items of the above array
+    // But the above was evaluated only once. Why? 
+    // Because, you need to pass it a function to get a different array every time. Like this:
+    a = Array.fill(10, { f.value } );  // create another array with 10 items of the above array
+    // We can get at the first array and see it's different from the second array
+    a[0]
+    a[1]
+    // We could put a new array into a[0] (that slot contains an array)
+    a[0] = f.value
+    // We could put a new array into a[0][0] (an integer)
+    a[0][0] = f.value
 
 Above we added 12 to the minor scale.
 
-
     m = Scale.minor.degrees;
     m.add(12) // but try to run this line many times, the array won't grow forever
+
+[ TODO : In SuperCollider 3.12.2 this gives "ERROR: Primitive '_ArrayAdd' failed. Attempted write to immutable object." as above - Andy ]
 
 ### Lists
 
@@ -353,54 +354,48 @@ Lists are like arrays - and implement many of the same methods - but the are sli
 
 A dictionary is a collection of items where *keys* are mapped to *values*. Here, keys are keywords that are identifiers for slots in the collection. You can think of this like names for values. This can be quite useful. Let's explore two examples:
 
-```
-a = Dictionary.new
-a.put(\C, 60)
-a.put(\Cs, 61)
-a.put(\D, 62)
-a[\Ds] = 63 // same as .put
-// and now, let's get the values
-a.at(\D)
-a[\D#] // same as .at
+    a = Dictionary.new
+    a.put(\C, 60)
+    a.put(\Cs, 61)
+    a.put(\D, 62)
+    a[\Ds] = 63 // same as .put
+    // and now, let's get the values
+    a.at(\D)
+    a[\D#] // same as .at
 
-a.keys
-a.values
-a.getPairs
-a.findKeyForValue(60)
-```
+    a.keys
+    a.values
+    a.getPairs
+    a.findKeyForValue(60)
 
 Imagine how you would do this with an Array. One way would be 
 
-```
-a = [\C, 60, \Cs, 61, \D, 62, \Ds, 63]
-// we find the slot of a key:
-x = a.indexOf(\D) // 4
-a[x+1]
-// or simply
-a[a.indexOf(\D)+1]
-```
+
+    a = [\C, 60, \Cs, 61, \D, 62, \Ds, 63]
+    // we find the slot of a key:
+    x = a.indexOf(\D) // 4
+    a[x+1]
+    // or simply
+    a[a.indexOf(\D)+1]
+
 but using an array you need to keep track of the how things are organised and indexed.
 
 Another Dictionary example:
 
-```
-b = Dictionary.new
-b.put(\major, [ 0, 2, 4, 5, 7, 9, 11 ])
-b.put(\minor, [ 0, 2, 3, 5, 7, 8, 10 ])
-b[\minor]
-```
+    b = Dictionary.new
+    b.put(\major, [ 0, 2, 4, 5, 7, 9, 11 ])
+    b.put(\minor, [ 0, 2, 3, 5, 7, 8, 10 ])
+    b[\minor]
 
 ## Methods?
 
 We have now seen things as 100.rand and a.reverse. How does .rand and .reverse work? Well, SuperCollider is an [Object Orientated language](https://en.wikipedia.org/wiki/Object-oriented_programming) and these are *methods* of the respective classes. So an integer (like 100), has methods like .rand, .midicps, or .neg. It does not have a .reverse method. Why not? Because you can’t reverse a number. However, an array (like [11,22,33,44,55]) can be reversed or added to. We will explore this later in the chapter about Object Orientated programming in SC, but for now it is enough to think that the object (an instantiation of the class) has relevant methods. Or to use an analogy: let’s say we have a class called Car. This class is the information needed to build the car. When we build a Car, we instantiate the class and we have an actual Car. This car can then have some methods, for instance: start, drive, turn, putWipersOn. And these methods could have arguments, like speed(60), or turn(-60). You could think about the object as the noun, the method as the verb, and the argument as the adjective. (As in: John (object) walks (method) fast (adjective)).
 
-```
-// we create a new car. 4 indicating for example number of seats
-c = Car.new(4); 
-c.start;
-c.drive(40); // the car drives 40 miles per hour
-c.turn(-60); // the car turns 60 degrees to the left
-```
+    // we create a new car. 4 indicating for example number of seats
+    c = Car.new(4); 
+    c.start;
+    c.drive(40); // the car drives 40 miles per hour
+    c.turn(-60); // the car turns 60 degrees to the left
 
 So to really understand a class like Array or List you need to read the documentation and explore the methods available. Note also that the Array is subclassing (or getting methods from its superclass) the ArrayedColldection class. This means that it has all the methods of its superclass. Like a class “Car” might have a superclass called “Vehicle” of which a “Motorbike” would also be a subclass (a sibling to “Car”). You can explore this by peeking under the hood of SC a little:
 
