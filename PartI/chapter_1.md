@@ -394,8 +394,7 @@ We have now seen things as 100.rand and a.reverse. How does .rand and .reverse w
     c.drive(40); // the car drives 40 miles per hour
     c.turn(-60); // the car turns 60 degrees to the left
 
-So to really understand a class like Array or List you need to read the documentation and explore the methods available. Note also that the Array is subclassing (or getting methods from its superclass) the ArrayedColldection class. This means that it has all the methods of its superclass. Like a class “Car” might have a superclass called “Vehicle” of which a “Motorbike” would also be a subclass (a sibling to “Car”). You can explore this by peeking under the hood of SC a little:
-
+So to really understand a class like Array or List you need to read the documentation and explore the methods available. Note also that the Array is subclassing (or getting methods from its superclass) the ArrayedCollection class. This means that it has all the methods of its superclass. Like a class “Car” might have a superclass called “Vehicle” of which a “Motorbike” would also be a subclass (a sibling to “Car”). You can explore this by peeking under the hood of SC a little:
 
     Array.openHelpFile // get the documentation of the Array class
     Array.dumpInterface // get the interface or the methods of the Array class
@@ -403,7 +402,7 @@ So to really understand a class like Array or List you need to read the document
 
 You can see that in the .dumpFullInterface method will tell you all the methods Array *inherits* from its superclasses.
 
-Now, this might give you a bit of a brainache, but don’t worry, you will gradually learn this terminology and what it means for you in your musical or sound practice with SuperCollider. Wikipedia is good place to start reading about [Object Oriented Programming] (https://en.wikipedia.org/wiki/Object-oriented_programming).
+Now, this might give you a bit of a brainache, but don’t worry, you will gradually learn this terminology and what it means for you in your musical or sound practice with SuperCollider. Wikipedia is good place to start reading about [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming).
 
 ## Conditionals, data flow and control
 
