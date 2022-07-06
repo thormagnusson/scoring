@@ -38,12 +38,12 @@ This could also be written as:
 
 or, in another example:
 
-    a = {
+    a = fork{
       inf.do({arg i;
       "iteration: ".post; i.postln;
        0.25.wait; 
       })
-    }.play;
+    };
 
     a.stop; // run this line later
 
@@ -184,11 +184,11 @@ All this is quite musically boring, but here is where patterns start to get exci
         \instrument, \patsynth1, 
         \freq, Pseq([100, 200, 120, 180], inf), 
         \cutoff, Pseq([1000, 2000, 3000], inf), // only 3 items in the list - it loops 
-        \amp, Pseq([0.3, 0.6], inf), , 
+        \amp, Pseq([0.3, 0.6], inf),
         \dur, Pseq([0.125, 0.25, 0.5, 0.25], inf), 
     ).play;
 
-There will be more on patterns later, but at this stage it is a good idea to play with the pattern documentation files, for example the ones found under Streams-Patterns-Events. There is also a fantastic  Practical Guide to Patterns in the SuperCollider Documentation. Under 'Streams-Patterns-Events>A-Practical-Guide'
+There will be more on patterns later, but at this stage it is a good idea to play with the pattern documentation files, for example the ones found under Streams-Patterns-Events. There is also a fantastic  Practical Guide to Patterns in the SuperCollider Documentation. Under 'Streams-Patterns-Events>A-Practical-Guide' [ TODO think this section has been renamed ? - Andy ]
  
 To end this section on patterns, let's simply play a little with Pdefs:
 
