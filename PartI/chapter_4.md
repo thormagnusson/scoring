@@ -6,7 +6,7 @@ SuperCollider is a very open environment. It can be used for practically anythin
 
 *MIDI: A popular 80s technology (SC2 Documentation)*
 
-MIDI is one of the most common protocols for hardware and software communication. It is a simple protocol that has proven valuable, although it is currently seen to have gone past its prime. The key point of using MIDI in SuperCollider is to be able to interact with hardware controllers, synthesizers, and other software. SuperCollider has a strong MIDI implementation and should support everything you might want to do with MIDI.
+MIDI is one of the most common protocols for hardware and software communication. It is a simple protocol that has proven valuable, <del>although it is currently seen to have gone past its prime.</del> [ I don't think so? The spec had its first update in my lifetime since you wrote this. - Andy ] The key point of using MIDI in SuperCollider is to be able to interact with hardware controllers, synthesizers, and other software. SuperCollider has a strong MIDI implementation and should support everything you might want to do with MIDI.
 
     // we initialise the MIDI client and the post window will output your devices
     MIDIClient.init;
@@ -32,9 +32,9 @@ Let's start with exploring MIDI controllers. The MIDI methods that you will use 
 
 If you were to use a relatively good MIDI keyboard, you would be able to use most of these methods. In the following example we will explore the interaction with a simple MIDI keyboard.
 
-T> Virtual MIDI Keyboard
-T>
-T> If you don't have a hardware MIDI keyboard you could download a cross platform and open source software MIDI keyboard from here:  http://vmpk.sourceforge.net
+> Virtual MIDI Keyboard
+>
+> If you don't have a hardware MIDI keyboard you could download a cross platform and open source software MIDI keyboard from here:  http://vmpk.sourceforge.net
 
     MIDIIn.connectAll; // we connect all the incoming devices
     MIDIFunc.noteOn({arg ...x; x.postln; }); // we post all the args
@@ -69,14 +69,14 @@ But the above is not a common synth-like behaviour. Typically you'd hold down th
         Out.ar(0, signal*env);
     }).add;
     // since we added default freq and amp arguments we can try it:
-    a = Synth(\midisynth) // playing 440 Hz
+    a = Synth(\midisynth2) // playing 440 Hz
     a.release // and the synth will play until we release it (gate = 0)
     // the adsr envelope in the synth keeps the gate open as long as note is down
 
     // now let's connect the MIDI
     MIDIIn.connectAll; // we connect all the incoming devices
     MIDIdef.noteOn(\mydef, {arg vel, key, channel, device; 
-        Synth(\midisynth, [\freq, key.midicps, \amp, vel/127]);
+        Synth(\midisynth2, [\freq, key.midicps, \amp, vel/127]);
         [key, vel].postln; 
     });
 
@@ -113,12 +113,12 @@ And it will release the note when you release your finger. However, now the prob
 
 ### MIDI Communication (Output)
 
-## TIP: Free MIDI Synthesizers
-Some free synths you might want to use in the examples below:
-
-OSX : [SimpleSynth]: (http://notahat.com/simplesynth)
-Linux : [ZynAddSubFX]: (http://zynaddsubfx.sourceforge.net)
-Windows :[VirtualMIDISynth]: (http://coolsoft.altervista.org/en/virtualmidisynth)
+> TIP: Free MIDI Synthesizers
+> 
+> Some free synths you might want to use in the examples below:
+> - OSX : [SimpleSynth]: (http://notahat.com/simplesynth)
+> - Linux : [ZynAddSubFX]: (http://zynaddsubfx.sourceforge.net)
+> - Windows :[VirtualMIDISynth]: (http://coolsoft.altervista.org/en/virtualmidisynth)
 
 It is equally easy to control external hardware or software with SuperCollider's MIDI functionality. Just as above we initialise the MIDI client and check which devices are available:
 

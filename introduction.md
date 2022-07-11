@@ -49,7 +49,7 @@ You have now installed and explored SuperCollider on your system. This book does
 
 Mac: ~/Library/Application Support/SuperCollider  
 Linux:  
-Windows:  
+Windows: %LocalAppData%\SuperCollider
 
 
 

@@ -125,7 +125,7 @@ Comments are red by default, but can be any colour (in the Format menu choose �
 Here is a mantra to memorise: Variables are containers of some value. They are names or references to values that could change (their value can vary). So we could create a variable that is a property of yourself called age. Every year this variable will increase by one integer (a whole number). So let us try this now:
 
     var age = 33;
-    age = age + 1; // here the variable ‘age’ gets a new value, or 33 + 1
+    age = age + 1; // here the variable 'age' gets a new value, or 33 + 1
     age.postln; // and it posts 34
 
 SuperCollider is not strongly typed so there is no need to declare the data type of variables. Data types (in other languages) include : integer, float, double, string, custom objects, etc... But in SuperCollider you can create a variable that contains an integer at one stage, but later contains reference to a string or a float. This can be handy, but one has to be careful as this can introduce bugs in your code.
@@ -145,9 +145,9 @@ SuperCollider has scope, so if you declare a variable within a certain scope, su
     var v, a;
     v = 22;
     a = 33;
-    “The value of a is : “.post; a.postln;
+    "The value of a is : ".post; a.postln;
     )
-    “The value of a is now : ”.post; a.postln; // then run this line 
+    "The value of a is now : ".post; a.postln; // then run this line 
 
 
 So ‘a’ is a global variable. This is good for prototyping and testing, but not recommended as a good software design. A variable with the name ‘myvar’ could not be global – only single lowercase characters.
@@ -162,18 +162,18 @@ But typically we just declare the variable (var) in the beginning of the program
 
 But why use variables at all? Why not simply write the numbers or the value wherever we need it? Let’s take one example that should demonstrate clearly why they are useful:
 
-```{
- // declare the variables
-var freq, oscillator, filter, signal;
-freq = 333; // set the frequency variable
- // create a Saw wave oscillator with two channels
-oscillator = Saw.ar([freq, freq+2]);
-// use a resonant low pass filter on the oscillator
-filter = RLPF.ar(oscillator, freq*4, 0.25);
-// multiply the signal by 0.5 to lower the amplitude 
-signal = filter * 0.5;
-}.play;
-```
+
+    {
+        // declare the variables
+        var freq, oscillator, filter, signal;
+        freq = 333; // set the frequency variable
+        // create a Saw wave oscillator with two channels
+        oscillator = Saw.ar([freq, freq+2]);
+        // use a resonant low pass filter on the oscillator
+        filter = RLPF.ar(oscillator, freq*4, 0.25);
+        // multiply the signal by 0.5 to lower the amplitude 
+        signal = filter * 0.5;
+    }.play;
 
 As you can see, the ‘freq’ variable is used in various places in the above synthesizer. You can now change the value of the variable to something like 500, and it the frequency will ‘automatically’ be turned into 500 Hz in the left channel, 502 Hz in the right, and the cutoff frequency will be 2000 Hz. So instead of changing these variables throughout the code, you change it in one place and its value magically plugged into every location where that variable is used.
 
@@ -237,12 +237,12 @@ SuperCollider contains quite a lot of examples of “syntax sugar”, i.e., wher
 You will see the following
 
     f = { arg string; string.postln; } // we will post the string that comes into the function
-    f.value(“hi there") // and here we call the function passing “hi there” as the argument.
+    f.value("hi there") // and here we call the function passing "hi there" as the argument.
 
 
 Often written in this form:
 
-    f = {|string| string.postln;} // arguments can be defined within two pipes ‘|’
+    f = {|string| string.postln;} // arguments can be defined within two pipes '|'
     f.("hi there") // and you can skip the .value and just write a dot (.)
 
 ## Arrays, Lists and Dictionaries
@@ -274,7 +274,7 @@ What happened here is that we tell the Array class to fill a new array with five
 We can now play a little bit with that function that we pass to the array creation:
 
 
-    a = Array.fill(5, { arg i; i }); // create a function with the iterator (‘i’) argument
+    a = Array.fill(5, { arg i; i }); // create a function with the iterator ('i') argument
     a = Array.fill(5, { arg i; (i+1)*11 }); // the same as the first array we created
     a = Array.fill(5, { arg i; i*i });
     a = Array.series(5, 10, 2); // a new method (series). 
@@ -288,63 +288,61 @@ You might wonder why this is so fantastic or important. The fact is that arrays 
 m is here an array with the following values: [ 0, 2, 3, 5, 7, 8, 10 ]. So in a C scale, 0 would be C, 2 would be D (two half notes above C), 3 would be E flat, and so on. We could represent those values as MIDI notes, where 60 is the C note (~ 261Hz). And we could even look at the actual frequencies in Hertz of those MIDI notes. (Those frequencies would be passed to the oscillators as they are expecting frequencies and not MIDI notes as arguments).
 
     m = Scale.minor.degrees; // Scale class returns the degrees of the minor scale
-    m = m.add(12); // you might want to add the octave (12) into your array
+    m = m.add(12); // you might want to add the octave (12) into your array 
+[ TODO : In SuperCollider 3.12.2 this doesn't work at this point, you get ERROR: Primitive '_ArrayAdd' failed. Attempted write to immutable object. - after running one of the lines below it then works. I don't understand why well enough to explain, but have an inkling (the array contains a refernce to Scale.minor.degrees rather than the values [ 0, 2, 3, 5, 7, 8, 10 ] until something forces it to, right ? ) - Andy ]
+
     m = m+60 // here we simply add 60 to all the values in the array
     m = m.midicps // and here we turn the MIDI notes into their frequency values
-    m = m.cpsmidi // but let’s turn them back to MIDI values for now
+    m = m.cpsmidi // but let's turn them back to MIDI values for now
 
 We could now play with the ‘m’ array a little. In an algorithmic composition, for example, you might want to pick a random note from the minor scale
 
-    n = m.choose; // choose a random MIDI note and store it in the variable ’n’
+    n = m.choose; // choose a random MIDI note and store it in the variable 'n'
     x = m.scramble; // we could create a melody by scrambling the array
     x = m.scramble[0..3] // scramble the list and select the first 4 notes
     p = m.mirror // mirror the array (like an ascending and descending scale)
 
 You will note that in ‘x = m.scramble’ above, the ‘x’ variable contains an array with a scrambled version of the ‘m’ array. The ‘m’ array is still intact: you haven’t scrambled that one, you’ve simply said “put a scrambled version of ‘m’ into variable ‘x’.” So the original ‘m’ is still there. If you really wanted to scramble ‘m’ you would have to do:
   
-    m = m.scramble; // a scrambled version of the ‘m’ array is put back into the ‘m’ variable
-    // But now it’s all scrambled up. Let’s sort it into ascending numbers again:
+    m = m.scramble; // a scrambled version of the 'm' array is put back into the 'm' variable
+    // But now it's all scrambled up. Let's sort it into ascending numbers again:
     m = m.sort
 
 Arrays can contain anything, and in SuperCollider, they can contain values of mixed types, such as integers, strings, floats, and so on.
 
 
-    a = [1, “two”, 3.33, Scale.minor] // we mix types into the array.
+    a = [1, "two", 3.33, Scale.minor] // we mix types into the array.
     // This can be dangerous as the following
     a[0]*10 // will work
-    a[1]*10 // but this won’t, as you cant multiply the word “two” with 10 
+    a[1]*10 // but this won't, as you cant multiply the word "two" with 10 
 
 
 Arrays can contain other arrays, containing other arrays of any dimensions.
 
-```
-// a function that will create a 5 item array with random numbers from 0 to 10
-f = { Array.fill(5, { 10.rand }) }; // array generating function 
-a = Array.fill(10, f.value);  // create another array with 10 items of the above array
-// But the above was evaluated only once. Why? 
-// Because, you need to pass it a function to get a different array every time. Like this:
-a = Array.fill(10, { f.value } );  // create another array with 10 items of the above array
-// We can get at the first array and see it’s different from the second array
-a[0]
-a[1]
-// We could put a new array into a[0] (that slot contains an array)
-a[0] = f.value
-// We could put a new array into a[0][0] (an integer)
-a[0][0] = f.value
-```
+    // a function that will create a 5 item array with random numbers from 0 to 10
+    f = { Array.fill(5, { 10.rand }) }; // array generating function 
+    a = Array.fill(10, f.value);  // create another array with 10 items of the above array
+    // But the above was evaluated only once. Why? 
+    // Because, you need to pass it a function to get a different array every time. Like this:
+    a = Array.fill(10, { f.value } );  // create another array with 10 items of the above array
+    // We can get at the first array and see it's different from the second array
+    a[0]
+    a[1]
+    // We could put a new array into a[0] (that slot contains an array)
+    a[0] = f.value
+    // We could put a new array into a[0][0] (an integer)
+    a[0][0] = f.value
 
-Above we added 12 to the minor scale.
+Above we added 12 to an array, the minor scale in the previous instance.
 
-
-    m = Scale.minor.degrees;
-    m.add(12) // but try to run this line many times, the array won’t grow forever
+    m = []    // Start with an new, empty array
+    m.add(12) // but try to run this line many times, the array won't grow forever
 
 ### Lists
 
 It is here that the List class becomes useful. 
 
-
-    l = List.new;
+    l = List.new;   // Start with an new, empty list
     l.add(100.rand) // try to run this a few times and watch the list grow
 
 Lists are like arrays - and implement many of the same methods - but the are slightly more expensive than arrays. In the example above you could simply do ‘a = a.add(100.rand)’ if ‘a’ was an array, but many people like lists for reasons we will discuss later.
@@ -353,65 +351,58 @@ Lists are like arrays - and implement many of the same methods - but the are sli
 
 A dictionary is a collection of items where *keys* are mapped to *values*. Here, keys are keywords that are identifiers for slots in the collection. You can think of this like names for values. This can be quite useful. Let's explore two examples:
 
-```
-a = Dictionary.new
-a.put(\C, 60)
-a.put(\Cs, 61)
-a.put(\D, 62)
-a[\Ds] = 63 // same as .put
-// and now, let's get the values
-a.at(\D)
-a[\D#] // same as .at
+    a = Dictionary.new
+    a.put(\C, 60)
+    a.put(\Cs, 61)
+    a.put(\D, 62)
+    a[\Ds] = 63 // same as .put
+    // and now, let's get the values
+    a.at(\D)
+    a[\Ds] // same as .at
 
-a.keys
-a.values
-a.getPairs
-a.findKeyForValue(60)
-```
+    a.keys
+    a.values
+    a.getPairs
+    a.findKeyForValue(60)
 
 Imagine how you would do this with an Array. One way would be 
 
-```
-a = [\C, 60, \Cs, 61, \D, 62, \Ds, 63]
-// we find the slot of a key:
-x = a.indexOf(\D) // 4
-a[x+1]
-// or simply
-a[a.indexOf(\D)+1]
-```
+
+    a = [\C, 60, \Cs, 61, \D, 62, \Ds, 63]
+    // we find the slot of a key:
+    x = a.indexOf(\D) // 4
+    a[x+1]
+    // or simply
+    a[a.indexOf(\D)+1]
+
 but using an array you need to keep track of the how things are organised and indexed.
 
 Another Dictionary example:
 
-```
-b = Dictionary.new
-b.put(\major, [ 0, 2, 4, 5, 7, 9, 11 ])
-b.put(\minor, [ 0, 2, 3, 5, 7, 8, 10 ])
-b[\minor]
-```
+    b = Dictionary.new
+    b.put(\major, [ 0, 2, 4, 5, 7, 9, 11 ])
+    b.put(\minor, [ 0, 2, 3, 5, 7, 8, 10 ])
+    b[\minor]
 
 ## Methods?
 
 We have now seen things as 100.rand and a.reverse. How does .rand and .reverse work? Well, SuperCollider is an [Object Orientated language](https://en.wikipedia.org/wiki/Object-oriented_programming) and these are *methods* of the respective classes. So an integer (like 100), has methods like .rand, .midicps, or .neg. It does not have a .reverse method. Why not? Because you can’t reverse a number. However, an array (like [11,22,33,44,55]) can be reversed or added to. We will explore this later in the chapter about Object Orientated programming in SC, but for now it is enough to think that the object (an instantiation of the class) has relevant methods. Or to use an analogy: let’s say we have a class called Car. This class is the information needed to build the car. When we build a Car, we instantiate the class and we have an actual Car. This car can then have some methods, for instance: start, drive, turn, putWipersOn. And these methods could have arguments, like speed(60), or turn(-60). You could think about the object as the noun, the method as the verb, and the argument as the adjective. (As in: John (object) walks (method) fast (adjective)).
 
-```
-// we create a new car. 4 indicating for example number of seats
-c = Car.new(4); 
-c.start;
-c.drive(40); // the car drives 40 miles per hour
-c.turn(-60); // the car turns 60 degrees to the left
-```
+    // we create a new car. 4 indicating for example number of seats
+    c = Car.new(4); 
+    c.start;
+    c.drive(40); // the car drives 40 miles per hour
+    c.turn(-60); // the car turns 60 degrees to the left
 
-So to really understand a class like Array or List you need to read the documentation and explore the methods available. Note also that the Array is subclassing (or getting methods from its superclass) the ArrayedColldection class. This means that it has all the methods of its superclass. Like a class “Car” might have a superclass called “Vehicle” of which a “Motorbike” would also be a subclass (a sibling to “Car”). You can explore this by peeking under the hood of SC a little:
-
+So to really understand a class like Array or List you need to read the documentation and explore the methods available. Note also that the Array is subclassing (or getting methods from its superclass) the ArrayedCollection class. This means that it has all the methods of its superclass. Like a class “Car” might have a superclass called “Vehicle” of which a “Motorbike” would also be a subclass (a sibling to “Car”). You can explore this by peeking under the hood of SC a little:
 
     Array.openHelpFile // get the documentation of the Array class
     Array.dumpInterface // get the interface or the methods of the Array class
-    Array.dumpFullInterface // get the methods of Array’s superclasses as well.
+    Array.dumpFullInterface // get the methods of Array's superclasses as well.
 
 You can see that in the .dumpFullInterface method will tell you all the methods Array *inherits* from its superclasses.
 
-Now, this might give you a bit of a brainache, but don’t worry, you will gradually learn this terminology and what it means for you in your musical or sound practice with SuperCollider. Wikipedia is good place to start reading about [Object Oriented Programming] (https://en.wikipedia.org/wiki/Object-oriented_programming).
+Now, this might give you a bit of a brainache, but don’t worry, you will gradually learn this terminology and what it means for you in your musical or sound practice with SuperCollider. Wikipedia is good place to start reading about [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming).
 
 ## Conditionals, data flow and control
 
@@ -430,8 +421,8 @@ if( hungry, { eat } );
 So let’s play with this:
 
 
-    if( true, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-    if( false, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( true, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
+    if( false, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
 
 You can see that true and false are keywords in SuperCollider. They are so called Boolean values. You should not use those as variables (well, you can’t). In digital systems, we operate in binary code, in 1s and 0s. True is associated with 1 and false with 0. 
 
@@ -483,8 +474,8 @@ And we also use comparison operators
 
 You might not realise it yet, but knowing what you now know is very powerful and it is something you will use all the time for synthesis, algorithmic composition, instrument building, sound installations, and so on. So make sure that you understand this properly. Let's play with this a bit more in if-statements:
 
-    if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
-    if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE”.postln;});
+    if( 3==3, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
+    if( 3==4, { "condition is TRUE".postln;}, {"condition is FALSE".postln;});
     // and things can be a bit more complex:
     if( (3 < 4) && (true != false), {"TRUE".postln;}, {"FALSE".postln;});
 
@@ -528,9 +519,11 @@ The final thing we need to learn in this chapter is looping. Looping is one of t
 
 In many programming languages this is done with a [for-loop] (http://en.wikipedia.org/wiki/For_loop):
 
-    for(int i = 0; i > 10, i++) {
-    	println("i is now" + i);		
-    }
+```c
+for(int i = 0; i > 10, i++) {
+    println("i is now" + i);		
+}
+```
 
 The above code will work in Java, C, JavaScript and many other languages. But SuperCollider is a fully object orientated language, where everything is an object - which can have methods - so an integer can have a method like .neg, or .midicps, but also .do (the loop).
 
@@ -606,14 +599,14 @@ This is enough about the language. Now is the time to dive into making sounds an
 
 Each UGen or Class in SuperCollider has a class definition in a class file. These files are compiled every time SuperCollider is started and become the application environment we are using. SC is an "interpreted" language. (As opposed to a "compiled" language like C or Java). If you add a new class to SuperCollider, you need to *recompile* the language (there is a menu item for that), or simply start again. 
 
-XXX FIX THIS:
+XXX FIX THIS: [ TODO check the windows shortcuts too, usually just apple/cmd = control - Andy ]
 - For checking the sourcefile, type Apple + i (or cmd + i) when a class is highlighted (say SinOsc)
 - For checking the implementations of a method (which classes support it), type Apple + Y - poll
 - For checking references to a method (which classes support it), type Shift + Apple + Y - poll
 
     UGen.dumpSubclassList // UGen is a class. Try dumping LFSaw for example
 
-    UGen.browse  // examine methods interactively in a GUI (OSX)
+    UGen.browse  // examine methods interactively in a GUI (OSX [ TODO and Windows, but is it not on Linux ? - Andy ] )
     
     SinOsc.dumpFullInterface  // list all methods for the classhierarchically
     SinOsc.dumpMethodList  // list instance methods alphabetically

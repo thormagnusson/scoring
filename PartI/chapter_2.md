@@ -10,7 +10,7 @@ This chapter will introduce the SuperCollider server for the most basic purposes
 
 ## Booting the Server
 
-When you "boot the server", you are basically starting a new process on your computer that does not have a GUI (Graphical User Interface). If you observe the list of running processes of your computer, you will see that when you boot the server, a new process will appear (try typing "top" into a Unix Terminal). The server can be booted through a menu command (Menu-> XXX), or through a command line. 
+When you "boot the server", you are basically starting a new process on your computer that does not have a GUI (Graphical User Interface). If you observe the list of running processes of your computer, you will see that when you boot the server, a new process will appear (try typing "top" into a Unix Terminal or check Windows' Task Manager). The server can be booted through a menu command (Server -> <span style="text-decoration: underline">B</span>oot Server), by Ctrl-B (or Cmd/Apple-B) or through a command line. 
 
 ## The 's' Variable
 
@@ -28,7 +28,7 @@ The 's' variable is a unique variable in SuperCollider, as there is a convention
 
 We can explore creating our own servers with specific ports and IP addresses:
 
-    n = NetAddr("127.0.0.1", 57200); // IP (get it from whatsmyip.org) and port
+    n = NetAddr("127.0.0.1", 57200); // IP and port
     p = Server.new("hoho", n); // create a server with the specific net address
     p.makeWindow; // make a GUI window
     p.boot; // boot it
@@ -87,7 +87,7 @@ The beauty of UGens is how one can connect the output of one to the input of ano
     	// we create a slow oscillator in control rate
     	a = SinOsc.kr(1);
     	// the output of 'a' is used to multiply the frequency of a saw wave
-    	// resulting in a frequency from 440 to 660. Why?
+    	// resulting in a frequency from 220 to 660. Why?
     	b = Saw.ar(220*(a+2), 0.5);
     	// and here we use 'a' to control amplitude (from -0.5 to 0.5)
     	c = Saw.ar(110, a*0.5);
@@ -114,11 +114,11 @@ This is a simple case study of how UGens can be added (b+c), and used in any cal
 
 A good way to explore UGens is to browse them in the documentation.
 
-    UGen.browse; // XXX check if this works
+    UGen.browse;
 
 ## The SynthDef
 
-Above we explored UGens by wrapping them in a function and call .play on that function ({}.play). What this does is to turn the function (indicated by {}, as we learned in the chapter 1) into a synth definition that is sent to the server and then played. The {}.play (or Function:play, if you want to peek into the source code – by highlighting "Function:play" and hit, Cmd+I – and explore how SC compiles the function into a SynthDef under the hood) is how many people sketch sound in SuperCollider and it's good for demonstration purposes, but for all real synth building, we need to create a synth definition, or a SynthDef. 
+Above we explored UGens by wrapping them in a function and call .play on that function ({}.play). What this does is to turn the function (indicated by {}, as we learned in the chapter 1) into a synth definition that is sent to the server and then played. The {}.play (or Function:play, if you want to peek into the source code – by highlighting "Function:play" and hit, Cmd+I (Win: Ctrl-I) – and explore how SC compiles the function into a SynthDef under the hood) is how many people sketch sound in SuperCollider and it's good for demonstration purposes, but for all real synth building, we need to create a synth definition, or a SynthDef. 
 
 A SynthDef is a pre-compiled graph of unit generators. This graph is written to a binary file and sent to the server over OSC (Open Sound Control - See chapter XXX). This file is stored in the "synthdefs" folder on your system. In a way you could see it as your own VST plugin for SuperCollider, and you don't need the source code for it to work (although it does not make sense to throw that away). 
 
@@ -138,7 +138,7 @@ You notice that we have done two things: given the function a name (\mysaw), and
     {Out.ar(1, Saw.ar(440))}.play // out on the right speaker
 
 NOTE: There is a difference in the Function-play code and the SynthDef, in that 
-we need the Out Ugen in a synth definition to tell the server
+we **need** the Out Ugen in a synth definition to tell the server
 which audiobus the sound should go out of. (0 is left, 1 is right)
 
 But back to our SynthDef, we can now try to instantiate it, and create a Synth. (A Synth is an instantiation (child) of a SynthDef). This synth can then be controlled if we reference it with a variable.
@@ -219,7 +219,7 @@ SuperCollider has various ways to explore what is happening on the server, in ad
     // we can explore the output of the SinOsc
     {SinOsc.ar(1).poll}.play // you won't be able to hear this
     // and compare to white noise:
-    {WhiteNoise.ar(1).poll}.play // the first arg of noise is amplitude
+    {WhiteNoise.ar(1).poll}.play // You will hear this! The first arg of noise is amplitude
     // we can explore the mouse:
     {MouseX.kr(10, 1000).poll}.play // nothing to hear
     
@@ -231,7 +231,7 @@ SuperCollider has various ways to explore what is happening on the server, in ad
     {SinOsc.ar(LFNoise2.ar(1).range(100, 1000).poll(10, "freq"))}.play
 
 
-People often use poll to explore what is happening in the synth, to debug, or try to understand why something is not working. But it is typically not used in a concrete situation (XXX rephrase?). Another way to explore the server state is to use scope:
+People often use poll to explore what is happening in the synth, to debug, or try to understand why something is not working. But it is typically not used in a finished work or performance. Another way to explore the server state is to use scope:
 
     // we can explore the output of the SinOsc
     {SinOsc.ar(1)}.scope // you won't be able to hear this
@@ -276,7 +276,7 @@ We can see that by default SuperCollider has 8 output channels, 8 input channels
     // Pan2 makes takes the signal and converts it into an array of two signals
     { Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
     // or we can play it out on bus 6 (and you probably won't hear it)
-    { Out.ar(0, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
+    { Out.ar(6, Pan2.ar(PinkNoise.ar(1), 0)) }.scope(8)
     // but the above is the same as:
     { a = PinkNoise.ar(1); Out.ar(0, [a, a]) }.scope(8)
     // and (where the first six channels are silent):
@@ -316,16 +316,6 @@ As we have discussed, the SuperCollider language and server are two separate app
 
 What we see above is the SendTrig, sending 10 messages every second to the language (the Impulse triggers those messages). It sends a '/tr' OSC message to port 57120 locally. (Don't worry, we'll explore this later in a chapter on OSC). The OSCdef then has a function that posts the message from the server.
 
-    // this is happening in the language
-    OSCdef(\listener, {arg msg, time, addr, recvPort; msg.postln; }, '/tr', n);
-    // and this happens on the server
-    {
-    	var freq;
-    	freq = LFSaw.ar(0.75, 0, 100, 900);
-    	SendTrig.kr(Impulse.kr(10), 0, freq);
-    	SinOsc.ar(freq, 0, 0.5)
-    }.play 
-
 A little bit more complex example might involve a GUI (Graphical User Interfaces are part of the language) and synthesis on the server:
 
     (
@@ -352,42 +342,41 @@ A little bit more complex example might involve a GUI (Graphical User Interfaces
     	SendReply.kr(Impulse.kr(10), '/slider2D', [mx, my]); 
     	(SinOsc.ar(freq, 0, 0.5)+RLPF.ar(WhiteNoise.ar(0.3), mx.range(100, 3000), my))!2 ;
     }.play;
-     )
+    )
 
 We could also write values to a control bus on the server, from which we can read in the language. Here is an example:
 
 
     b = Bus.control(s,1); // we create a control bus
     {Out.kr(b, MouseX.kr(20,22000))}.play // and we write the output of some UGen to the bus
-    b.get({arg val; val.postln;}); // we poll the puss from the language
+    b.get({arg val; val.postln;}); // we poll the buss from the language
     // or even:
     fork{loop{ b.get({arg val; val.postln;});0.1.wait; }}
 
-Check the source of Bus (by hitting Cmd+I) and locate the .get method. You will see that the Bus .get method is using an OSCresponder (XXX is that the case in 3.6?) underneath. It is therefore "asynchronous", meaning that it will not happen in the linear order of your code. (The language is asking server for the value, and the server then sends back to language. This takes time).
+Check the source of Bus (by hitting Cmd+I / Ctrl-I on Win) and locate the .get method. You will see that the Bus .get method is using an OSCresponder (XXX is that the case in 3.6?) underneath. It is therefore "asynchronous", meaning that it will not happen in the linear order of your code. (The language is asking server for the value, and the server then sends back to language. This takes time).
 
 Here is a program that demonstrates the asynchronous nature of b.get. The {}.play from above has to be running. Note how the numbered lines of code appear in the post window "in the wrong order"! (Instead of a synchronous posting of 1, 2 and 3, we get the order of 1, 3 and 2). It takes between 0.1 and 10 milliseconds to get the value on a 2.8 GHz Intel computer.
 
-```js
-(
-x = 0; y= 0;
-b = Bus.control(s,1); // we create a control bus
-{Out.kr(b, MouseX.kr(20,22000))}.play;
-t = Task({
-	inf.do({
-		"1 - before b.get : ".post; x = Main.elapsedTime.postln;
-		b.get({|val| 	
-			"2 - ".post; val.postln; 
-			y = Main.elapsedTime.postln;
-        	"the asynchronious process took : ".post; 
-        	(y-x).post; 
-        	" seconds".postln;
-        	}); //  this value is returned AFTER the next line
-    		"3 - after b.get : ".post;  Main.elapsedTime.postln;
-    		0.5.wait;
-    	})
-    }).play;
-)
-```
+    (
+    x = 0; y= 0;
+    b = Bus.control(s,1); // we create a control bus
+    {Out.kr(b, MouseX.kr(20,22000))}.play;
+    t = Task({
+        inf.do({
+            "1 - before b.get : ".post; x = Main.elapsedTime.postln;
+            b.get({|val| 	
+                "2 - ".post; val.postln; 
+                y = Main.elapsedTime.postln;
+                "the asynchronious process took : ".post; 
+                (y-x).post; 
+                " seconds".postln;
+                }); //  this value is returned AFTER the next line
+                "3 - after b.get : ".post;  Main.elapsedTime.postln;
+                0.5.wait;
+            })
+        }).play;
+    )
+
 This type of communication from the server to the language is not very common. The other way (from language to server) is however. This section is therefore not vital for your work in SuperCollider, but you will at some point stumble into the question of synchronous and asynchronous communication with the server and this section should prepare you for that.
 
 
